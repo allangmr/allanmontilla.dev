@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Archivo Narrow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Oswald", "Archivo Narrow", ui-sans-serif, system-ui, sans-serif;
   --font-script: "Caveat", ui-serif, Georgia, serif;
 
   --color-void: #080b12;

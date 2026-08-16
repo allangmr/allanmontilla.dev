@@ -85,11 +85,11 @@ function createIsthmus(): Group {
   const pathMat = new MeshStandardMaterial({
     color: ACCENT,
     emissive: ACCENT,
-    emissiveIntensity: 1.35,
-    roughness: 0.4,
-    metalness: 0.2,
+    emissiveIntensity: 1.7,
+    roughness: 0.35,
+    metalness: 0.25,
     transparent: true,
-    opacity: 0.85,
+    opacity: 0.92,
   });
   const path = new Mesh(new BoxGeometry(1.55, 0.04, 54), pathMat);
   path.rotation.y = -0.55;
@@ -321,20 +321,20 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
 
   scene.add(new AmbientLight(0x6b8395, 0.45));
 
-  const key = new DirectionalLight(0xffe8d0, 1.15);
+  const key = new DirectionalLight(0xffe8d0, 1.35);
   key.position.set(-6, 18, 10);
   scene.add(key);
 
-  const rim = new DirectionalLight(0xd48243, 0.55);
+  const rim = new DirectionalLight(0xd48243, 0.75);
   rim.position.set(10, 8, -8);
   scene.add(rim);
 
-  const fill = new DirectionalLight(0x3d5a70, 0.35);
+  const fill = new DirectionalLight(0x3d5a70, 0.4);
   fill.position.set(4, 6, 14);
   scene.add(fill);
 
   // Cool shimmer light for water peaks
-  const shimmer = new DirectionalLight(0xa8c4d8, 0.4);
+  const shimmer = new DirectionalLight(0xa8c4d8, 0.5);
   shimmer.position.set(2, 12, -4);
   scene.add(shimmer);
 
