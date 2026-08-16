@@ -1,27 +1,36 @@
 import {
-  AmbientLight,
   Color,
-  DirectionalLight,
-  FogExp2,
-  Group,
   Mesh,
   MeshBasicMaterial,
-  PerspectiveCamera,
+  OrthographicCamera,
   PlaneGeometry,
   Scene,
   SRGBColorSpace,
   Texture,
   TextureLoader,
-  Vector3,
+  Vector2,
   WebGLRenderer,
 } from 'three';
 
 const SCENE_BG = 0x0f1821;
-const COFFEE = 0x9a7766;
 
 type SceneHandle = {
   destroy: () => void;
 };
+
+/** Normalized UV polyline on the glowing canal (u, v with v=0 at top). Sampled from isthmus-path.png. */
+const CANAL_UV: ReadonlyArray<readonly [number, number]> = [
+  [0.27, 0.76],
+  [0.32, 0.68],
+  [0.37, 0.66],
+  [0.42, 0.61],
+  [0.48, 0.57],
+  [0.53, 0.53],
+  [0.58, 0.42],
+  [0.63, 0.39],
+  [0.68, 0.34],
+  [0.73, 0.32],
+];
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -42,30 +51,15 @@ function loadTexture(loader: TextureLoader, url: string): Promise<Texture> {
   });
 }
 
-function makeSpritePlane(
-  texture: Texture,
-  width: number,
-  height: number,
-  opts: { opacity?: number; depthWrite?: boolean } = {},
-): Mesh {
-  const mat = new MeshBasicMaterial({
-    map: texture,
-    transparent: true,
-    opacity: opts.opacity ?? 1,
-    depthWrite: opts.depthWrite ?? false,
-    toneMapped: false,
-  });
-  const mesh = new Mesh(new PlaneGeometry(width, height), mat);
-  return mesh;
-}
-
-/** Point along the glowing canal (local plane coords, z up toward camera). */
-function canalPoint(t: number, planeW: number, planeH: number): Vector3 {
-  // Path runs bottom-left → top-right on the isthmus plate, slightly curved
-  const u = t;
-  const x = (-0.34 + u * 0.7) * planeW;
-  const y = (-0.32 + u * 0.68) * planeH + Math.sin(u * Math.PI) * planeH * 0.035;
-  return new Vector3(x, y, 0.08);
+function samplePath(points: ReadonlyArray<readonly [number, number]>, t: number): Vector2 {
+  const n = points.length - 1;
+  const clamped = Math.min(1, Math.max(0, t));
+  const f = clamped * n;
+  const i = Math.min(n - 1, Math.floor(f));
+  const local = f - i;
+  const a = points[i];
+  const b = points[i + 1];
+  return new Vector2(a[0] + (b[0] - a[0]) * local, a[1] + (b[1] - a[1]) * local);
 }
 
 export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
@@ -74,13 +68,12 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
 
   const scene = new Scene();
   scene.background = new Color(SCENE_BG);
-  scene.fog = new FogExp2(SCENE_BG, 0.028);
+  // No fog — black PNG edges blend into clear color, not "space"
 
-  const camera = new PerspectiveCamera(32, 1, 0.1, 80);
-  // Locked cinematic high-angle — matches design-ref composition
-  const camHome = new Vector3(0.15, -6.2, 9.4);
-  camera.position.copy(camHome);
-  camera.lookAt(new Vector3(0.2, 0.4, 0));
+  // Flat plate facing the camera (no world tilt)
+  const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+  camera.position.set(0, 0, 2);
+  camera.lookAt(0, 0, 0);
 
   const renderer = new WebGLRenderer({
     canvas,
@@ -91,92 +84,74 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setClearColor(SCENE_BG, 1);
 
-  scene.add(new AmbientLight(0x597386, 0.55));
-  const key = new DirectionalLight(0xd9d7d7, 0.65);
-  key.position.set(-4, 6, 10);
-  scene.add(key);
-  const rim = new DirectionalLight(COFFEE, 0.35);
-  rim.position.set(5, -2, 6);
-  scene.add(rim);
+  const plateGeo = new PlaneGeometry(1, 1);
+  const plateMat = new MeshBasicMaterial({
+    transparent: true,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const plate = new Mesh(plateGeo, plateMat);
+  plate.position.z = 0;
+  scene.add(plate);
 
-  const root = new Group();
-  // Slight tilt so plates read as a 3D diorama, not a flat poster
-  root.rotation.x = -0.72;
-  root.rotation.z = 0.08;
-  scene.add(root);
+  const shipGeo = new PlaneGeometry(1, 1);
+  const shipMat = new MeshBasicMaterial({
+    transparent: true,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const ship = new Mesh(shipGeo, shipMat);
+  ship.position.z = 0.01;
+  ship.visible = false;
+  scene.add(ship);
 
-  const planeW = 14;
-  const planeH = 14;
-
-  let ship: Mesh | null = null;
   let disposed = false;
   let raf = 0;
   let running = false;
   let last = performance.now();
-  let progress = reduced ? 0.45 : 0.32;
+  let progress = reduced ? 0.5 : 0.05;
   let drift = 0;
+  let plateW = 1;
+  let plateH = 1;
+  let shipW = 0.14;
+  let shipH = 0.09;
 
-  const loader = new TextureLoader();
+  const placeShip = (t: number) => {
+    const uv = samplePath(CANAL_UV, t);
+    // UV (0–1, v down from top) → plane local (origin center, y up)
+    ship.position.x = (uv.x - 0.5) * plateW;
+    ship.position.y = (0.5 - uv.y) * plateH;
+    ship.position.z = 0.01;
+  };
 
-  const boot = async () => {
-    const [isthmusTex, waterTex, shipTex] = await Promise.all([
-      loadTexture(loader, '/scene/isthmus-path.png'),
-      loadTexture(loader, '/scene/canal-water.png'),
-      loadTexture(loader, '/scene/ship.png'),
-    ]);
-    if (disposed) {
-      isthmusTex.dispose();
-      waterTex.dispose();
-      shipTex.dispose();
-      return;
+  const layout = () => {
+    const w = parent.clientWidth || canvas.clientWidth || 1;
+    const h = parent.clientHeight || canvas.clientHeight || 1;
+    const aspect = w / h;
+
+    // Cover the canvas with the square plate (like CSS background-size: cover)
+    if (aspect >= 1) {
+      plateW = aspect * 2;
+      plateH = 2;
+    } else {
+      plateW = 2;
+      plateH = 2 / aspect;
     }
+    plate.scale.set(plateW, plateH, 1);
 
-    const isthmus = makeSpritePlane(isthmusTex, planeW, planeH, { depthWrite: true });
-    isthmus.position.z = 0;
-    root.add(isthmus);
+    // Ship ~13% of plate width — small like the mock
+    shipW = plateW * 0.13;
+    shipH = shipW * (933 / 1400);
+    ship.scale.set(shipW, shipH, 1);
 
-    // Soft coffee bloom under the path
-    const glow = new Mesh(
-      new PlaneGeometry(planeW * 0.12, planeH * 0.85),
-      new MeshBasicMaterial({
-        color: COFFEE,
-        transparent: true,
-        opacity: 0.14,
-        depthWrite: false,
-      }),
-    );
-    glow.position.set(0.15, 0.05, 0.02);
-    glow.rotation.z = -0.78;
-    root.add(glow);
-
-    const water = makeSpritePlane(waterTex, planeW * 0.92, planeH * 0.92, { opacity: 0.92 });
-    water.position.z = 0.04;
-    root.add(water);
-
-    // Ship aspect ~1.5:1
-    const shipW = 3.35;
-    const shipH = shipW * (933 / 1400);
-    ship = makeSpritePlane(shipTex, shipW, shipH, { depthWrite: true });
-    // Keep isometric read: slight counter-tilt so the sprite faces camera
-    ship.rotation.x = 0.55;
-    ship.rotation.z = -0.55;
-    root.add(ship);
-
-    const placeShip = (t: number) => {
-      if (!ship) return;
-      const p = canalPoint(t, planeW, planeH);
-      ship.position.copy(p);
-      ship.position.z = 0.12;
-    };
+    camera.left = -aspect;
+    camera.right = aspect;
+    camera.top = 1;
+    camera.bottom = -1;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h, false);
 
     placeShip(progress);
-    renderer.render(scene, camera);
-
-    if (!reduced) {
-      running = true;
-      last = performance.now();
-      raf = requestAnimationFrame(tick);
-    }
   };
 
   const tick = (now: number) => {
@@ -184,39 +159,28 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
-    progress += dt * 0.022;
-    if (progress > 0.88) progress = 0.18;
+    progress += dt * 0.035;
+    if (progress > 1) progress = 0;
 
-    if (ship) {
-      const p = canalPoint(progress, planeW, planeH);
-      ship.position.copy(p);
-      ship.position.z = 0.12 + Math.sin(now * 0.0015) * 0.01;
-    }
+    placeShip(progress);
+    // Tiny bob only — stay on the plate
+    ship.position.y += Math.sin(now * 0.002) * plateH * 0.0015;
 
-    // Subtle locked-camera drift only
+    // Optional 1–2px-scale drift (orthographic units are tiny)
     drift += dt;
-    camera.position.x = camHome.x + Math.sin(drift * 0.18) * 0.12;
-    camera.position.y = camHome.y + Math.cos(drift * 0.14) * 0.08;
-    camera.lookAt(0.2, 0.4, 0);
+    camera.position.x = Math.sin(drift * 0.12) * 0.008;
+    camera.position.y = Math.cos(drift * 0.1) * 0.006;
+    camera.lookAt(camera.position.x, camera.position.y, 0);
 
     renderer.render(scene, camera);
     raf = requestAnimationFrame(tick);
-  };
-
-  const resize = () => {
-    const w = parent.clientWidth || canvas.clientWidth || 1;
-    const h = parent.clientHeight || canvas.clientHeight || 1;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h, false);
-    if (!running) renderer.render(scene, camera);
   };
 
   const onVisibility = () => {
     if (document.hidden) {
       running = false;
       cancelAnimationFrame(raf);
-    } else if (!reduced && !disposed && ship) {
+    } else if (!reduced && !disposed && ship.visible) {
       running = true;
       last = performance.now();
       raf = requestAnimationFrame(tick);
@@ -227,14 +191,10 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     if (e.matches) {
       running = false;
       cancelAnimationFrame(raf);
-      progress = 0.45;
-      if (ship) {
-        const p = canalPoint(progress, planeW, planeH);
-        ship.position.copy(p);
-        ship.position.z = 0.12;
-      }
+      progress = 0.5;
+      placeShip(progress);
       renderer.render(scene, camera);
-    } else if (!document.hidden && !disposed && ship) {
+    } else if (!document.hidden && !disposed && ship.visible) {
       running = true;
       last = performance.now();
       raf = requestAnimationFrame(tick);
@@ -244,16 +204,40 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   motionQuery.addEventListener('change', onMotionChange);
 
-  const ro = new ResizeObserver(resize);
+  const ro = new ResizeObserver(layout);
   ro.observe(parent);
   document.addEventListener('visibilitychange', onVisibility);
-  resize();
+  layout();
   renderer.render(scene, camera);
 
-  void boot().catch(() => {
-    // Fail soft — leave solid bg if assets fail
-    renderer.render(scene, camera);
-  });
+  const loader = new TextureLoader();
+  void Promise.all([
+    loadTexture(loader, '/scene/isthmus-path.png'),
+    loadTexture(loader, '/scene/ship.png'),
+  ])
+    .then(([isthmusTex, shipTex]) => {
+      if (disposed) {
+        isthmusTex.dispose();
+        shipTex.dispose();
+        return;
+      }
+      plateMat.map = isthmusTex;
+      plateMat.needsUpdate = true;
+      shipMat.map = shipTex;
+      shipMat.needsUpdate = true;
+      ship.visible = true;
+      layout();
+      renderer.render(scene, camera);
+
+      if (!reduced) {
+        running = true;
+        last = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+    })
+    .catch(() => {
+      renderer.render(scene, camera);
+    });
 
   return {
     destroy() {
@@ -264,21 +248,12 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
       document.removeEventListener('visibilitychange', onVisibility);
       motionQuery.removeEventListener('change', onMotionChange);
       renderer.dispose();
-      scene.traverse((obj) => {
-        if (obj instanceof Mesh) {
-          obj.geometry.dispose();
-          const mat = obj.material;
-          if (Array.isArray(mat)) {
-            mat.forEach((m) => {
-              if (m.map) m.map.dispose();
-              m.dispose();
-            });
-          } else {
-            if (mat.map) mat.map.dispose();
-            mat.dispose();
-          }
-        }
-      });
+      plateGeo.dispose();
+      shipGeo.dispose();
+      if (plateMat.map) plateMat.map.dispose();
+      if (shipMat.map) shipMat.map.dispose();
+      plateMat.dispose();
+      shipMat.dispose();
     },
   };
 }
