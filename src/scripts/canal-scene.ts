@@ -16,7 +16,7 @@ import {
 const SCENE_BG = 0x0f1821;
 
 /** Sink this fraction of ship height so the red waterline meets the water. */
-const SHIP_SINK = 0.2;
+const SHIP_SINK = 0.28;
 
 type SceneHandle = {
   destroy: () => void;
@@ -84,9 +84,10 @@ function makeShadowTexture(): CanvasTexture {
   c.width = 256;
   c.height = 128;
   const ctx = c.getContext('2d')!;
-  const g = ctx.createRadialGradient(128, 64, 8, 128, 64, 120);
-  g.addColorStop(0, 'rgba(0,0,0,0.55)');
-  g.addColorStop(0.45, 'rgba(0,0,0,0.28)');
+  const g = ctx.createRadialGradient(128, 72, 4, 128, 72, 118);
+  g.addColorStop(0, 'rgba(0,0,0,0.75)');
+  g.addColorStop(0.35, 'rgba(0,0,0,0.45)');
+  g.addColorStop(0.7, 'rgba(0,0,0,0.18)');
   g.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, 256, 128);
@@ -97,30 +98,30 @@ function makeShadowTexture(): CanvasTexture {
 
 function makeWakeTexture(): CanvasTexture {
   const c = document.createElement('canvas');
-  c.width = 256;
-  c.height = 128;
+  c.width = 320;
+  c.height = 160;
   const ctx = c.getContext('2d')!;
-  // Soft V wake fading aft
-  const g = ctx.createLinearGradient(20, 64, 240, 64);
-  g.addColorStop(0, 'rgba(210,220,230,0.55)');
-  g.addColorStop(0.35, 'rgba(180,195,210,0.22)');
-  g.addColorStop(1, 'rgba(180,195,210,0)');
+  // Brighter foam V so it reads on dark teal water
+  const g = ctx.createLinearGradient(8, 80, 300, 80);
+  g.addColorStop(0, 'rgba(230,236,242,0.75)');
+  g.addColorStop(0.25, 'rgba(200,214,224,0.4)');
+  g.addColorStop(0.65, 'rgba(170,188,200,0.15)');
+  g.addColorStop(1, 'rgba(170,188,200,0)');
   ctx.fillStyle = g;
   ctx.beginPath();
-  ctx.moveTo(16, 64);
-  ctx.lineTo(240, 28);
-  ctx.lineTo(240, 100);
+  ctx.moveTo(10, 80);
+  ctx.lineTo(300, 22);
+  ctx.lineTo(300, 138);
   ctx.closePath();
   ctx.fill();
-  // Center foam streak
-  const g2 = ctx.createLinearGradient(16, 64, 200, 64);
-  g2.addColorStop(0, 'rgba(230,235,240,0.45)');
-  g2.addColorStop(1, 'rgba(230,235,240,0)');
+  const g2 = ctx.createLinearGradient(10, 80, 220, 80);
+  g2.addColorStop(0, 'rgba(245,248,250,0.7)');
+  g2.addColorStop(1, 'rgba(245,248,250,0)');
   ctx.strokeStyle = g2;
-  ctx.lineWidth = 6;
+  ctx.lineWidth = 8;
   ctx.beginPath();
-  ctx.moveTo(20, 64);
-  ctx.lineTo(200, 64);
+  ctx.moveTo(14, 80);
+  ctx.lineTo(210, 80);
   ctx.stroke();
   const tex = new CanvasTexture(c);
   tex.colorSpace = SRGBColorSpace;
@@ -161,12 +162,13 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   const shadowMat = new MeshBasicMaterial({
     map: shadowTex,
     transparent: true,
-    opacity: 0.85,
+    opacity: 1,
     depthWrite: false,
     toneMapped: false,
   });
   const shadow = new Mesh(new PlaneGeometry(1, 1), shadowMat);
   shadow.position.z = 0.008;
+  shadow.renderOrder = 1;
   shadow.visible = false;
   scene.add(shadow);
 
@@ -175,12 +177,13 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   const wakeMat = new MeshBasicMaterial({
     map: wakeTex,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.9,
     depthWrite: false,
     toneMapped: false,
   });
   const wake = new Mesh(new PlaneGeometry(1, 1), wakeMat);
   wake.position.z = 0.01;
+  wake.renderOrder = 2;
   wake.visible = false;
   scene.add(wake);
 
@@ -195,6 +198,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   });
   const ship = new Mesh(shipGeo, shipMat);
   ship.position.z = 0.02;
+  ship.renderOrder = 3;
   ship.visible = false;
   scene.add(ship);
 
@@ -219,24 +223,22 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     ship.position.set(x, sunkY, 0.02);
     ship.rotation.set(0, 0, 0);
 
-    // Shadow under hull, slightly toward water contact
-    shadow.position.set(x + shipW * 0.02, sunkY - shipH * 0.28, 0.008);
-    shadow.scale.set(shipW * 0.95, shipH * 0.38, 1);
+    // Shadow under hull — dark contact on water
+    shadow.position.set(x + shipW * 0.02, sunkY - shipH * 0.32, 0.008);
+    shadow.scale.set(shipW * 1.05, shipH * 0.45, 1);
     shadow.rotation.z = 0;
 
     // Wake aft of stern (opposite travel = toward top-right)
-    const tangent = pathTangent(WATER_UV, t); // UV space: +u right, +v down
-    // Convert UV tangent to plane space (y flips)
+    const tangent = pathTangent(WATER_UV, t);
     const dirX = tangent.x;
     const dirY = -tangent.y;
-    // Aft = opposite of forward
     const aftX = -dirX;
     const aftY = -dirY;
-    const wakeLen = shipW * 0.85;
-    const wakeWid = shipH * 0.42;
+    const wakeLen = shipW * 1.05;
+    const wakeWid = shipH * 0.5;
     wake.position.set(
-      x + aftX * shipW * 0.42,
-      sunkY + aftY * shipH * 0.15 - shipH * 0.22,
+      x + aftX * shipW * 0.62,
+      sunkY + aftY * shipH * 0.2 - shipH * 0.3,
       0.01,
     );
     wake.scale.set(wakeLen, wakeWid, 1);
