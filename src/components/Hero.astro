@@ -17,11 +17,12 @@ const chips = [
       class="absolute inset-x-0 top-[34%] h-[56%] sm:inset-y-0 sm:left-[22%] sm:right-0 sm:top-0 sm:h-full lg:left-[26%]"
     >
       <canvas id="canal-canvas" class="hero-fade h-full w-full [animation-delay:200ms]"></canvas>
+      <!-- Keep text legible on the left without veiling the ship on the right -->
       <div
-        class="absolute inset-0 bg-gradient-to-r from-void via-void/55 to-transparent sm:via-void/25 sm:to-transparent"
+        class="absolute inset-0 bg-gradient-to-r from-void from-5% via-void/50 via-[32%] to-transparent to-[58%] sm:from-10% sm:via-void/35 sm:via-[28%] sm:to-transparent sm:to-[52%]"
       >
       </div>
-      <div class="absolute inset-0 bg-gradient-to-t from-void/80 via-transparent to-void/50"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-void/70 via-transparent via-40% to-void/35"></div>
       <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-void to-transparent sm:h-36">
       </div>
     </div>

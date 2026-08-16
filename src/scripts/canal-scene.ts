@@ -1,5 +1,4 @@
 import {
-  BoxGeometry,
   CanvasTexture,
   Color,
   LinearFilter,
@@ -24,13 +23,13 @@ const SHIP_PLATE_SCALE = 0.17;
  * Path delta so the ship center waits in the water in front of the gate
  * (bow near the door) instead of sitting on top of the leaves.
  */
-const GATE_STOP_BEFORE = 0.16;
+const GATE_STOP_BEFORE = 0.22;
 
 /** Z stack: plate → covers → ship (waiting) → gate leaves → ship (through) → FX */
 const Z_COVER = 0.004;
-const Z_SHIP_WAIT = 0.01;
-const Z_GATE = 0.02;
-const Z_SHIP_PASS = 0.03;
+const Z_SHIP_WAIT = 0.008;
+const Z_GATE = 0.025;
+const Z_SHIP_PASS = 0.035;
 const Z_SHADOW = 0.006;
 const Z_WAKE = 0.007;
 
@@ -275,12 +274,12 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     cover.renderOrder = 1;
     scene.add(cover);
 
-    const left = new Mesh(new BoxGeometry(1, 1, 0.14), gateMat.clone());
+    const left = new Mesh(new PlaneGeometry(1, 1), gateMat.clone());
     left.position.z = Z_GATE;
     left.renderOrder = 5;
     scene.add(left);
 
-    const right = new Mesh(new BoxGeometry(1, 1, 0.14), gateEdgeMat.clone());
+    const right = new Mesh(new PlaneGeometry(1, 1), gateEdgeMat.clone());
     right.position.z = Z_GATE;
     right.renderOrder = 5;
     scene.add(right);
@@ -370,7 +369,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
 
       // Thick lock-door leaves spanning the full channel when closed
       const leafAcross = coverAcross * 0.5;
-      const leafAlong = Math.max(coverAlong * 1.8, plateH * 0.07);
+      const leafAlong = Math.max(coverAlong * 2.2, plateH * 0.085);
       lock.left.scale.set(leafAcross, leafAlong, 1);
       lock.right.scale.set(leafAcross, leafAlong, 1);
 
