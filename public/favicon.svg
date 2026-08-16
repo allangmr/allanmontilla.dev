@@ -1,12 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="6" fill="#15202b"/>
-  <text
-    x="16"
-    y="21"
-    text-anchor="middle"
-    font-family="ui-sans-serif, system-ui, sans-serif"
-    font-size="13"
-    font-weight="700"
-    fill="#f7f6f3"
-  >AM</text>
+  <rect width="32" height="32" rx="6" fill="#080B12"/>
+  <path d="M9 24 L14 8 L16.2 8 L11.2 24 Z" fill="#D48243"/>
+  <path d="M15.5 24 L20.5 8 L22.7 8 L17.7 24 Z" fill="#D48243"/>
+  <rect x="18.5" y="18.5" width="5.5" height="1.6" fill="#D48243"/>
 </svg>

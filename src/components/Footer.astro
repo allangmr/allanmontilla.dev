@@ -11,13 +11,15 @@ const links = [
 ];
 ---
 
-<footer id="contact" class="border-t border-line scroll-mt-24">
-  <div class="mx-auto max-w-3xl px-6 py-14 sm:px-8 sm:py-16">
-    <h2 class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-subtle">Contact</h2>
-    <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink-muted">
-      Panama · remote US/EU
+<footer id="contact" class="scroll-mt-24 border-t border-line bg-void">
+  <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+    <h2 class="font-display text-sm font-semibold uppercase tracking-[0.28em] text-accent">
+      Contact
+    </h2>
+    <p class="mt-5 max-w-xl text-lg leading-relaxed text-snow-muted">
+      Panama · remote US/EU · Available for new opportunities
     </p>
-    <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-ink" role="list">
+    <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-snow" role="list">
       {
         links.map((link) => (
           <li>
@@ -32,14 +34,8 @@ const links = [
         ))
       }
     </ul>
-    <p class="mt-6 text-sm text-ink-subtle">
-      <a
-        href={`mailto:${email}?subject=Resume%20request`}
-        class="underline-offset-4 hover:text-ink hover:underline"
-      >
-        Resume on request
-      </a>
+    <p class="mt-10 text-xs tracking-wide text-mist">
+      © {new Date().getFullYear()} Allan Montilla
     </p>
-    <p class="mt-10 text-xs text-ink-subtle">© {new Date().getFullYear()} Allan Montilla</p>
   </div>
 </footer>

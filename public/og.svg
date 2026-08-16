@@ -1,7 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
-  <rect width="1200" height="630" fill="#f7f6f3"/>
-  <rect x="0" y="0" width="1200" height="8" fill="#0f6e56"/>
-  <text x="80" y="250" font-family="ui-sans-serif, system-ui, sans-serif" font-size="56" font-weight="700" fill="#15202b">Allan Montilla</text>
-  <text x="80" y="330" font-family="ui-sans-serif, system-ui, sans-serif" font-size="34" font-weight="500" fill="#4a5563">Full-stack TypeScript engineer</text>
-  <text x="80" y="390" font-family="ui-sans-serif, system-ui, sans-serif" font-size="26" fill="#6b7280">LMS, SCORM, and AI learning products · Panama · remote US/EU</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#080B12"/>
+  <path d="M120 420 L260 140 H310 L170 420 Z" fill="#D48243"/>
+  <path d="M250 420 L390 140 H440 L300 420 Z" fill="#D48243"/>
+  <rect x="360" y="330" width="90" height="22" fill="#D48243"/>
+  <text x="520" y="280" fill="#FFFFFF" font-family="Arial Narrow, Arial, sans-serif" font-size="64" font-weight="700" letter-spacing="4">ALLAN MONTILLA</text>
+  <text x="520" y="350" fill="#6B8395" font-family="Arial, sans-serif" font-size="28" letter-spacing="2">Full-stack TypeScript · Panama</text>
+  <text x="520" y="400" fill="#D48243" font-family="Arial, sans-serif" font-size="22" letter-spacing="3">LMS · SCORM · AI LEARNING</text>
 </svg>

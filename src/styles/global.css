@@ -1,16 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
-  --color-ink: #15202b;
-  --color-ink-muted: #4a5563;
-  --color-ink-subtle: #6b7280;
-  --color-paper: #f7f6f3;
-  --color-paper-elevated: #ffffff;
-  --color-line: #e4e1da;
-  --color-accent: #0f6e56;
-  --color-accent-hover: #0b5744;
-  --color-accent-soft: #e8f5f0;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo Narrow", ui-sans-serif, system-ui, sans-serif;
+  --font-script: "Caveat", ui-serif, Georgia, serif;
+
+  --color-void: #080b12;
+  --color-void-elevated: #0e131c;
+  --color-void-soft: #121821;
+  --color-fog: #9aa7b5;
+  --color-mist: #6b8395;
+  --color-snow: #ffffff;
+  --color-snow-muted: #d7dee6;
+  --color-line: rgb(255 255 255 / 0.12);
+  --color-line-strong: rgb(255 255 255 / 0.22);
+  --color-accent: #d48243;
+  --color-accent-hover: #e09255;
+  --color-accent-soft: rgb(212 130 67 / 0.12);
 }
 
 html {
@@ -25,11 +31,11 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-ink);
-  background-color: var(--color-paper);
+  color: var(--color-snow-muted);
+  background-color: var(--color-void);
   background-image:
-    radial-gradient(ellipse 80% 50% at 100% -10%, rgb(15 110 86 / 0.08), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 0% 20%, rgb(21 32 43 / 0.04), transparent 50%);
+    radial-gradient(ellipse 70% 45% at 70% 20%, rgb(212 130 67 / 0.06), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgb(107 131 149 / 0.08), transparent 50%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -38,4 +44,9 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+::selection {
+  background: rgb(212 130 67 / 0.35);
+  color: var(--color-snow);
 }

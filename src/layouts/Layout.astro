@@ -25,6 +25,7 @@ const ogImage = new URL('/og.svg', Astro.site).href;
     <link rel="canonical" href={canonical} />
     <meta name="author" content="Allan Montilla" />
     <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#080B12" />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
@@ -44,14 +45,14 @@ const ogImage = new URL('/og.svg', Astro.site).href;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&family=Caveat:wght@500;600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
       rel="stylesheet"
     />
   </head>
   <body class="min-h-screen antialiased">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-paper-elevated focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-sm"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-void-elevated focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-snow focus:shadow-sm"
     >
       Skip to content
     </a>
