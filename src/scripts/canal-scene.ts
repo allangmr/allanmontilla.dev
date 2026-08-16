@@ -20,16 +20,17 @@ import {
   WebGLRenderer,
 } from 'three';
 
-const ACCENT = 0xee9153;
-const COPPER = 0xf0a06a;
-const WATER = 0x0a1830;
-const TERRAIN = 0x0c121a;
-const HULL = 0x0d1520;
-const WATERLINE = 0x8a3a28;
-const CONTAINER_ORANGE = 0xee9153;
-const CONTAINER_SLATE = 0x5a7388;
-const CONTAINER_GRAY = 0x6e757c;
-const BRIDGE = 0xeef2f6;
+const ACCENT = 0x9a7766;
+const COPPER = 0xb08d7a;
+const WATER = 0x0c1620;
+const TERRAIN = 0x0f1821;
+const HULL = 0x121c26;
+const WATERLINE = 0x7a5a4c;
+const CONTAINER_ORANGE = 0x9a7766;
+const CONTAINER_SLATE = 0x597386;
+const CONTAINER_GRAY = 0x8a8585;
+const BRIDGE = 0xd9d7d7;
+const SCENE_BG = 0x0f1821;
 
 type SceneHandle = {
   destroy: () => void;
@@ -302,8 +303,8 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   const parent = canvas.parentElement ?? canvas;
 
   const scene = new Scene();
-  scene.background = new Color(0x080b12);
-  scene.fog = new Fog(0x080b12, 14, 42);
+  scene.background = new Color(SCENE_BG);
+  scene.fog = new Fog(SCENE_BG, 14, 42);
 
   const camera = new PerspectiveCamera(36, 1, 0.1, 100);
   // High-angle cinematic view along the diagonal canal
@@ -317,24 +318,24 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     powerPreference: 'high-performance',
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-  renderer.setClearColor(0x080b12, 1);
+  renderer.setClearColor(SCENE_BG, 1);
 
-  scene.add(new AmbientLight(0x6b8395, 0.45));
+  scene.add(new AmbientLight(0x597386, 0.5));
 
-  const key = new DirectionalLight(0xffe8d0, 1.35);
+  const key = new DirectionalLight(0xe8e0d8, 1.25);
   key.position.set(-6, 18, 10);
   scene.add(key);
 
-  const rim = new DirectionalLight(0xee9153, 0.75);
+  const rim = new DirectionalLight(0x9a7766, 0.8);
   rim.position.set(10, 8, -8);
   scene.add(rim);
 
-  const fill = new DirectionalLight(0x3d5a70, 0.4);
+  const fill = new DirectionalLight(0x597386, 0.4);
   fill.position.set(4, 6, 14);
   scene.add(fill);
 
   // Cool shimmer light for water peaks
-  const shimmer = new DirectionalLight(0xa8c4d8, 0.5);
+  const shimmer = new DirectionalLight(0xd9d7d7, 0.35);
   shimmer.position.set(2, 12, -4);
   scene.add(shimmer);
 

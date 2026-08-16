@@ -5,18 +5,21 @@
   --font-display: "Oswald", "Archivo Narrow", ui-sans-serif, system-ui, sans-serif;
   --font-script: "Caveat", ui-serif, Georgia, serif;
 
-  --color-void: #080b12;
-  --color-void-elevated: #0e131c;
-  --color-void-soft: #121821;
-  --color-fog: #9aa7b5;
-  --color-mist: #6b8395;
-  --color-snow: #ffffff;
-  --color-snow-muted: #d7dee6;
-  --color-line: rgb(255 255 255 / 0.12);
-  --color-line-strong: rgb(255 255 255 / 0.22);
-  --color-accent: #ee9153;
-  --color-accent-hover: #f5a46a;
-  --color-accent-soft: rgb(238 145 83 / 0.12);
+  /* Official palette */
+  --color-void: #0f1821;
+  --color-void-elevated: #15202b;
+  --color-void-soft: #1a2733;
+  --color-fog: #a8b0b4;
+  --color-mist: #597386;
+  --color-snow: #d9d7d7;
+  --color-snow-muted: #d9d7d7;
+  --color-line: rgb(217 215 215 / 0.14);
+  --color-line-strong: rgb(217 215 215 / 0.24);
+  --color-accent: #9a7766;
+  --color-accent-hover: #b08d7a;
+  --color-accent-soft: rgb(154 119 102 / 0.14);
+  /* Logo-only orange (IA mark); not used as page accent */
+  --color-logo: #ee9153;
 }
 
 html {
@@ -31,11 +34,11 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-snow-muted);
+  color: var(--color-snow);
   background-color: var(--color-void);
   background-image:
-    radial-gradient(ellipse 70% 45% at 70% 20%, rgb(238 145 83 / 0.06), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 10% 80%, rgb(107 131 149 / 0.08), transparent 50%);
+    radial-gradient(ellipse 70% 45% at 70% 20%, rgb(154 119 102 / 0.07), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, rgb(89 115 134 / 0.1), transparent 50%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -47,7 +50,7 @@ body {
 }
 
 ::selection {
-  background: rgb(238 145 83 / 0.35);
+  background: rgb(154 119 102 / 0.4);
   color: var(--color-snow);
 }
 
