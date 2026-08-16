@@ -1,4 +1,5 @@
 import {
+  CanvasTexture,
   Color,
   Mesh,
   MeshBasicMaterial,
@@ -14,13 +15,16 @@ import {
 
 const SCENE_BG = 0x0f1821;
 
+/** Sink this fraction of ship height so the red waterline meets the water. */
+const SHIP_SINK = 0.2;
+
 type SceneHandle = {
   destroy: () => void;
 };
 
 /**
  * Water-channel path on canal-hero.png (u, v with v=0 at top).
- * Runs toward bottom-left / locks / viewer — NOT the orange mountain contours.
+ * Toward bottom-left / locks / viewer.
  */
 const WATER_UV: ReadonlyArray<readonly [number, number]> = [
   [0.71, 0.28],
@@ -67,6 +71,62 @@ function samplePath(points: ReadonlyArray<readonly [number, number]>, t: number)
   return new Vector2(a[0] + (b[0] - a[0]) * local, a[1] + (b[1] - a[1]) * local);
 }
 
+function pathTangent(points: ReadonlyArray<readonly [number, number]>, t: number): Vector2 {
+  const t0 = Math.max(0, t - 0.02);
+  const t1 = Math.min(1, t + 0.02);
+  const a = samplePath(points, t0);
+  const b = samplePath(points, t1);
+  return b.sub(a).normalize();
+}
+
+function makeShadowTexture(): CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 128;
+  const ctx = c.getContext('2d')!;
+  const g = ctx.createRadialGradient(128, 64, 8, 128, 64, 120);
+  g.addColorStop(0, 'rgba(0,0,0,0.55)');
+  g.addColorStop(0.45, 'rgba(0,0,0,0.28)');
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 256, 128);
+  const tex = new CanvasTexture(c);
+  tex.colorSpace = SRGBColorSpace;
+  return tex;
+}
+
+function makeWakeTexture(): CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 128;
+  const ctx = c.getContext('2d')!;
+  // Soft V wake fading aft
+  const g = ctx.createLinearGradient(20, 64, 240, 64);
+  g.addColorStop(0, 'rgba(210,220,230,0.55)');
+  g.addColorStop(0.35, 'rgba(180,195,210,0.22)');
+  g.addColorStop(1, 'rgba(180,195,210,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.moveTo(16, 64);
+  ctx.lineTo(240, 28);
+  ctx.lineTo(240, 100);
+  ctx.closePath();
+  ctx.fill();
+  // Center foam streak
+  const g2 = ctx.createLinearGradient(16, 64, 200, 64);
+  g2.addColorStop(0, 'rgba(230,235,240,0.45)');
+  g2.addColorStop(1, 'rgba(230,235,240,0)');
+  ctx.strokeStyle = g2;
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(20, 64);
+  ctx.lineTo(200, 64);
+  ctx.stroke();
+  const tex = new CanvasTexture(c);
+  tex.colorSpace = SRGBColorSpace;
+  return tex;
+}
+
 export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   const reduced = prefersReducedMotion();
   const parent = canvas.parentElement ?? canvas;
@@ -87,7 +147,6 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setClearColor(SCENE_BG, 1);
 
-  // Full cinematic canal plate (water + locks + mountains with topo lines)
   const plateGeo = new PlaneGeometry(1, 1);
   const plateMat = new MeshBasicMaterial({
     toneMapped: false,
@@ -97,11 +156,40 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   plate.position.z = 0;
   scene.add(plate);
 
-  // Large opaque ship — sits IN the water, never ghostly
+  // Contact shadow — sits on water under the hull
+  const shadowTex = makeShadowTexture();
+  const shadowMat = new MeshBasicMaterial({
+    map: shadowTex,
+    transparent: true,
+    opacity: 0.85,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const shadow = new Mesh(new PlaneGeometry(1, 1), shadowMat);
+  shadow.position.z = 0.008;
+  shadow.visible = false;
+  scene.add(shadow);
+
+  // Wake behind stern
+  const wakeTex = makeWakeTexture();
+  const wakeMat = new MeshBasicMaterial({
+    map: wakeTex,
+    transparent: true,
+    opacity: 0.7,
+    depthWrite: false,
+    toneMapped: false,
+  });
+  const wake = new Mesh(new PlaneGeometry(1, 1), wakeMat);
+  wake.position.z = 0.01;
+  wake.visible = false;
+  scene.add(wake);
+
+  // Ship — opaque cutout, alpha tested to kill white fringe/halo
   const shipGeo = new PlaneGeometry(1, 1);
   const shipMat = new MeshBasicMaterial({
     transparent: true,
     opacity: 1,
+    alphaTest: 0.5,
     depthWrite: true,
     toneMapped: false,
   });
@@ -114,19 +202,45 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   let raf = 0;
   let running = false;
   let last = performance.now();
-  // Start upstream (top-right), sail toward locks (bottom-left)
   let progress = reduced ? 0.55 : 0.12;
   let drift = 0;
   let plateW = 1;
   let plateH = 1;
+  let shipW = 1;
+  let shipH = 1;
 
   const placeShip = (t: number) => {
     const uv = samplePath(WATER_UV, t);
-    ship.position.x = (uv.x - 0.5) * plateW;
-    ship.position.y = (0.5 - uv.y) * plateH;
-    ship.position.z = 0.02;
-    // ship.png bow already faces bottom-left — no extra rotation
+    const x = (uv.x - 0.5) * plateW;
+    const y = (0.5 - uv.y) * plateH;
+    // Sink so red waterline meets the surface (keel hidden in water)
+    const sunkY = y - shipH * SHIP_SINK;
+
+    ship.position.set(x, sunkY, 0.02);
     ship.rotation.set(0, 0, 0);
+
+    // Shadow under hull, slightly toward water contact
+    shadow.position.set(x + shipW * 0.02, sunkY - shipH * 0.28, 0.008);
+    shadow.scale.set(shipW * 0.95, shipH * 0.38, 1);
+    shadow.rotation.z = 0;
+
+    // Wake aft of stern (opposite travel = toward top-right)
+    const tangent = pathTangent(WATER_UV, t); // UV space: +u right, +v down
+    // Convert UV tangent to plane space (y flips)
+    const dirX = tangent.x;
+    const dirY = -tangent.y;
+    // Aft = opposite of forward
+    const aftX = -dirX;
+    const aftY = -dirY;
+    const wakeLen = shipW * 0.85;
+    const wakeWid = shipH * 0.42;
+    wake.position.set(
+      x + aftX * shipW * 0.42,
+      sunkY + aftY * shipH * 0.15 - shipH * 0.22,
+      0.01,
+    );
+    wake.scale.set(wakeLen, wakeWid, 1);
+    wake.rotation.z = Math.atan2(aftY, aftX);
   };
 
   const layout = () => {
@@ -135,7 +249,6 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     const aspect = w / h;
     const plateAspect = 1600 / 900;
 
-    // Cover canvas with 16:9 canal plate
     if (aspect > plateAspect) {
       plateW = aspect * 2;
       plateH = plateW / plateAspect;
@@ -145,9 +258,9 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     }
     plate.scale.set(plateW, plateH, 1);
 
-    // ~45% of visible canal width ≈ ~26% of plate width (canal ~55% of frame diagonally)
-    const shipW = plateW * 0.26;
-    const shipH = shipW * (933 / 1400);
+    // Keep large: ~45% of canal width
+    shipW = plateW * 0.26;
+    shipH = shipW * (933 / 1400);
     ship.scale.set(shipW, shipH, 1);
 
     camera.left = -aspect;
@@ -168,7 +281,11 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     if (progress > 0.92) progress = 0.08;
 
     placeShip(progress);
-    ship.position.y += Math.sin(now * 0.0018) * plateH * 0.0012;
+    // Tiny bob — stay grounded (don't lift out of water)
+    const bob = Math.sin(now * 0.0018) * shipH * 0.008;
+    ship.position.y += bob;
+    shadow.position.y += bob * 0.4;
+    wake.position.y += bob * 0.3;
 
     drift += dt;
     camera.position.x = Math.sin(drift * 0.1) * 0.006;
@@ -225,11 +342,19 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
       }
       plateMat.map = heroTex;
       plateMat.needsUpdate = true;
+
+      // Premultiplied-style cutout: hard alpha, no fringe glow
+      shipTex.premultiplyAlpha = true;
       shipMat.map = shipTex;
       shipMat.transparent = true;
       shipMat.opacity = 1;
+      shipMat.alphaTest = 0.55;
+      shipMat.depthWrite = true;
       shipMat.needsUpdate = true;
+
       ship.visible = true;
+      shadow.visible = true;
+      wake.visible = true;
       layout();
       renderer.render(scene, camera);
 
@@ -254,10 +379,16 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
       renderer.dispose();
       plateGeo.dispose();
       shipGeo.dispose();
+      shadow.geometry.dispose();
+      wake.geometry.dispose();
       if (plateMat.map) plateMat.map.dispose();
       if (shipMat.map) shipMat.map.dispose();
+      shadowTex.dispose();
+      wakeTex.dispose();
       plateMat.dispose();
       shipMat.dispose();
+      shadowMat.dispose();
+      wakeMat.dispose();
     },
   };
 }
