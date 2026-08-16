@@ -26,15 +26,22 @@ const chips = [
       </div>
     </div>
 
-    <!-- Scene caption — isthmus-labeled treatment -->
+    <!-- Scene caption — mock placement, right of canal -->
     <aside
-      class="absolute bottom-[30%] right-6 hidden max-w-[210px] text-right lg:right-12 lg:block xl:bottom-[32%]"
+      class="absolute bottom-[28%] right-5 hidden max-w-[200px] text-left lg:right-10 lg:block xl:bottom-[30%] xl:right-12"
     >
       <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">Panama Canal</p>
-      <span class="ml-auto mt-2.5 block h-px w-12 bg-accent" aria-hidden="true"></span>
-      <p class="mt-3 text-[12px] leading-relaxed text-snow-muted/90">
+      <span class="mt-2.5 block h-px w-12 bg-accent" aria-hidden="true"></span>
+      <p class="mt-3 text-[12px] leading-relaxed text-snow/90">
         A symbol of connection, engineering and human ambition.
       </p>
+      <svg class="mt-3 h-4 w-4 text-accent" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path
+          d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.2 4.5 8 4.5 8s4.5-4.8 4.5-8c0-2.5-2-4.5-4.5-4.5Z"
+          stroke="currentColor"
+          stroke-width="1.2"></path>
+        <circle cx="8" cy="6" r="1.35" fill="currentColor"></circle>
+      </svg>
     </aside>
   </div>
 
@@ -126,6 +133,13 @@ const chips = [
         <p class="mt-2 text-xs leading-relaxed text-fog">
           A symbol of connection, engineering and human ambition.
         </p>
+        <svg class="mt-2 h-3.5 w-3.5 text-accent" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path
+            d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.2 4.5 8 4.5 8s4.5-4.8 4.5-8c0-2.5-2-4.5-4.5-4.5Z"
+            stroke="currentColor"
+            stroke-width="1.2"></path>
+          <circle cx="8" cy="6" r="1.35" fill="currentColor"></circle>
+        </svg>
       </aside>
     </div>
 
@@ -166,8 +180,8 @@ const chips = [
               Interactive by design
             </h2>
             <p class="mt-2 text-xs leading-relaxed text-snow-muted">
-              A procedural Three.js canal: cargo ship, lock walls, dark water, and orange topo lines
-              — a Panama signature baked into the hero.
+              A Panama Canal scene built from Grok plates: isthmus terrain, canal water, and a cargo ship
+              that travels the glowing path — a signature baked into the hero.
             </p>
             <a
               href="https://github.com/allangmr/allanmontilla.dev"
