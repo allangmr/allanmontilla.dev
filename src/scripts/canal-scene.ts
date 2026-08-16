@@ -60,27 +60,49 @@ function createTerrainWithContours(side: 'left' | 'right'): Group {
   }
 
   const lineMat = new LineBasicMaterial({
-    color: ACCENT,
+    color: 0xe8954f,
     transparent: true,
-    opacity: 0.72,
+    opacity: 0.92,
   });
 
-  for (let level = 0; level < 7; level++) {
-    const y = 0.35 + level * 0.78;
+  for (let level = 0; level < 8; level++) {
+    const y = 0.28 + level * 0.72;
     const points: number[] = [];
-    for (let i = 0; i <= 48; i++) {
-      const t = i / 48;
+    for (let i = 0; i <= 56; i++) {
+      const t = i / 56;
       const z = -34 + t * 68;
       const wave =
         Math.sin(t * Math.PI * 3.2 + level) * 0.85 +
         Math.cos(t * 9 + level * 0.45) * 0.3;
       const x =
-        sign * (4.9 + level * 0.62 + wave + Math.abs(Math.sin(t * Math.PI)) * 2.1);
+        sign * (4.7 + level * 0.58 + wave + Math.abs(Math.sin(t * Math.PI)) * 2.1);
       points.push(x, y + Math.sin(t * Math.PI * 2 + level) * 0.18, z);
     }
     const geo = new BufferGeometry();
     geo.setAttribute('position', new Float32BufferAttribute(points, 3));
     group.add(new Line(geo, lineMat));
+  }
+
+  // Secondary finer contour layer
+  const fineMat = new LineBasicMaterial({
+    color: ACCENT,
+    transparent: true,
+    opacity: 0.45,
+  });
+  for (let level = 0; level < 5; level++) {
+    const y = 0.55 + level * 1.05;
+    const points: number[] = [];
+    for (let i = 0; i <= 40; i++) {
+      const t = i / 40;
+      const z = -30 + t * 60;
+      const x =
+        sign *
+        (6.2 + level * 0.9 + Math.sin(t * Math.PI * 4 + level * 1.3) * 1.1);
+      points.push(x, y, z);
+    }
+    const geo = new BufferGeometry();
+    geo.setAttribute('position', new Float32BufferAttribute(points, 3));
+    group.add(new Line(geo, fineMat));
   }
 
   return group;
