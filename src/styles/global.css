@@ -14,9 +14,9 @@
   --color-snow-muted: #d7dee6;
   --color-line: rgb(255 255 255 / 0.12);
   --color-line-strong: rgb(255 255 255 / 0.22);
-  --color-accent: #d48243;
-  --color-accent-hover: #e09255;
-  --color-accent-soft: rgb(212 130 67 / 0.12);
+  --color-accent: #ee9153;
+  --color-accent-hover: #f5a46a;
+  --color-accent-soft: rgb(238 145 83 / 0.12);
 }
 
 html {
@@ -34,7 +34,7 @@ body {
   color: var(--color-snow-muted);
   background-color: var(--color-void);
   background-image:
-    radial-gradient(ellipse 70% 45% at 70% 20%, rgb(212 130 67 / 0.06), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 70% 20%, rgb(238 145 83 / 0.06), transparent 55%),
     radial-gradient(ellipse 50% 40% at 10% 80%, rgb(107 131 149 / 0.08), transparent 50%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
@@ -47,7 +47,7 @@ body {
 }
 
 ::selection {
-  background: rgb(212 130 67 / 0.35);
+  background: rgb(238 145 83 / 0.35);
   color: var(--color-snow);
 }
 

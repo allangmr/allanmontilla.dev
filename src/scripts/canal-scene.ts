@@ -20,13 +20,13 @@ import {
   WebGLRenderer,
 } from 'three';
 
-const ACCENT = 0xd48243;
-const COPPER = 0xe8954f;
+const ACCENT = 0xee9153;
+const COPPER = 0xf0a06a;
 const WATER = 0x0a1830;
 const TERRAIN = 0x0c121a;
 const HULL = 0x0d1520;
 const WATERLINE = 0x8a3a28;
-const CONTAINER_ORANGE = 0xc45f32;
+const CONTAINER_ORANGE = 0xee9153;
 const CONTAINER_SLATE = 0x5a7388;
 const CONTAINER_GRAY = 0x6e757c;
 const BRIDGE = 0xeef2f6;
@@ -325,7 +325,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   key.position.set(-6, 18, 10);
   scene.add(key);
 
-  const rim = new DirectionalLight(0xd48243, 0.75);
+  const rim = new DirectionalLight(0xee9153, 0.75);
   rim.position.set(10, 8, -8);
   scene.add(rim);
 
