@@ -113,7 +113,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   let raf = 0;
   let running = false;
   let last = performance.now();
-  let progress = reduced ? 0.45 : 0.08;
+  let progress = reduced ? 0.45 : 0.32;
   let drift = 0;
 
   const loader = new TextureLoader();
@@ -154,7 +154,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     root.add(water);
 
     // Ship aspect ~1.5:1
-    const shipW = 2.85;
+    const shipW = 3.35;
     const shipH = shipW * (933 / 1400);
     ship = makeSpritePlane(shipTex, shipW, shipH, { depthWrite: true });
     // Keep isometric read: slight counter-tilt so the sprite faces camera
@@ -184,8 +184,8 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
 
-    progress += dt * 0.028;
-    if (progress > 0.92) progress = 0.08;
+    progress += dt * 0.022;
+    if (progress > 0.88) progress = 0.18;
 
     if (ship) {
       const p = canalPoint(progress, planeW, planeH);
