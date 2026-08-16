@@ -59,8 +59,8 @@ const WATER_UV: ReadonlyArray<readonly [number, number]> = [
 
 /** Gate centers along the same UV space (mid then foreground). */
 const LOCKS: ReadonlyArray<{ u: number; v: number; openAt: number; closeAt: number }> = [
-  { u: 0.58, v: 0.42, openAt: 0.28, closeAt: 0.48 },
-  { u: 0.37, v: 0.66, openAt: 0.62, closeAt: 0.84 },
+  { u: 0.6, v: 0.4, openAt: 0.22, closeAt: 0.45 },
+  { u: 0.36, v: 0.67, openAt: 0.58, closeAt: 0.82 },
 ];
 
 function prefersReducedMotion(): boolean {
@@ -173,18 +173,18 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
 
   // Water-colored covers hide painted-closed gates on the plate
   const waterMat = new MeshBasicMaterial({
-    color: 0x2c363a,
+    color: 0x243038,
     toneMapped: false,
     depthWrite: false,
   });
 
   const gateMat = new MeshBasicMaterial({
-    color: 0x3a4248,
+    color: 0x8a9198,
     toneMapped: false,
     depthWrite: true,
   });
   const gateEdgeMat = new MeshBasicMaterial({
-    color: 0x2a3036,
+    color: 0x6e757c,
     toneMapped: false,
   });
 
@@ -270,15 +270,15 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
       const across = angle + Math.PI / 2;
 
       // Cover painted closed gate with water-colored strip across channel
-      const coverW = plateW * 0.11;
-      const coverH = plateH * 0.028;
+      const coverW = plateW * 0.14;
+      const coverH = plateH * 0.045;
       lock.cover.position.set(pos.x, pos.y, 0.004);
       lock.cover.scale.set(coverW, coverH, 1);
       lock.cover.rotation.z = across;
 
-      // Two leaves meet at center when closed; swing open along across-axis
+      // Two leaves meet at center when closed; slide open into walls
       const leafW = coverW * 0.48;
-      const leafH = coverH * 0.95;
+      const leafH = coverH * 1.15;
       lock.left.scale.set(leafW, leafH, 1);
       lock.right.scale.set(leafW, leafH, 1);
       // Store base pose on userData for animation
