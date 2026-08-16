@@ -238,40 +238,45 @@ function createShip(): Group {
   }
 
   // White multi-deck bridge at STERN
-  const bridgeMat = new MeshStandardMaterial({ color: BRIDGE, roughness: 0.45, metalness: 0.1 });
-  const bridgeBase = new Mesh(new BoxGeometry(1.35, 0.55, 1.15), bridgeMat);
-  bridgeBase.position.set(0, 1.0, 2.55);
+  const bridgeMat = new MeshStandardMaterial({
+    color: BRIDGE,
+    emissive: 0x3a4048,
+    emissiveIntensity: 0.35,
+    roughness: 0.4,
+    metalness: 0.08,
+  });
+  const bridgeBase = new Mesh(new BoxGeometry(1.45, 0.6, 1.25), bridgeMat);
+  bridgeBase.position.set(0, 1.05, 2.6);
   ship.add(bridgeBase);
 
-  const bridgeMid = new Mesh(new BoxGeometry(1.15, 0.45, 0.95), bridgeMat);
-  bridgeMid.position.set(0, 1.5, 2.55);
+  const bridgeMid = new Mesh(new BoxGeometry(1.25, 0.5, 1.0), bridgeMat);
+  bridgeMid.position.set(0, 1.58, 2.6);
   ship.add(bridgeMid);
 
-  const bridgeTop = new Mesh(new BoxGeometry(1.0, 0.38, 0.75), bridgeMat);
-  bridgeTop.position.set(0, 1.9, 2.55);
+  const bridgeTop = new Mesh(new BoxGeometry(1.05, 0.42, 0.8), bridgeMat);
+  bridgeTop.position.set(0, 2.02, 2.6);
   ship.add(bridgeTop);
 
-  // Dark windows
-  const windowMat = new MeshStandardMaterial({ color: 0x1a222c, roughness: 0.3, metalness: 0.4 });
-  for (const y of [1.05, 1.5, 1.9]) {
-    const w = new Mesh(new BoxGeometry(0.95, 0.1, 0.08), windowMat);
-    w.position.set(0, y, 2.0);
-    ship.add(w);
-  }
-
-  // Mast / radar
   const mast = new Mesh(
     new CylinderGeometry(0.035, 0.045, 1.1, 6),
     new MeshStandardMaterial({ color: 0xd0d6dc, roughness: 0.35, metalness: 0.55 }),
   );
-  mast.position.set(0, 2.5, 2.55);
+  mast.position.set(0, 2.65, 2.6);
   ship.add(mast);
 
   const radar = new Mesh(new BoxGeometry(0.35, 0.08, 0.2), bridgeMat);
-  radar.position.set(0, 3.05, 2.55);
+  radar.position.set(0, 3.2, 2.6);
   ship.add(radar);
 
-  ship.scale.setScalar(1.05);
+  // Dark windows
+  const windowMat = new MeshStandardMaterial({ color: 0x1a222c, roughness: 0.3, metalness: 0.4 });
+  for (const y of [1.1, 1.58, 2.0]) {
+    const w = new Mesh(new BoxGeometry(1.0, 0.1, 0.08), windowMat);
+    w.position.set(0, y, 2.0);
+    ship.add(w);
+  }
+
+  ship.scale.setScalar(1.2);
   return ship;
 }
 
