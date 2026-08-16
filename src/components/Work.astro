@@ -1,0 +1,106 @@
+---
+type WorkItem = {
+  title: string;
+  role: string;
+  what: string;
+  built: string;
+  stack: string[];
+  note?: string;
+  links?: { label: string; href: string }[];
+};
+
+const projects: WorkItem[] = [
+  {
+    title: 'LearnCapsule',
+    role: 'Full-stack engineer (product + platform)',
+    what: 'A web-first learning companion. Users save words, phrases, sentences, images, and audio from classes or self-study, then turn that material into flashcards, pronunciation practice, quizzes, matching, translation, and review capsules.',
+    built:
+      'Decoupled TypeScript backend and frontend, mobile in progress. AI flows that take a prompt such as "basic German greetings" and produce vocabulary, phrases, practice, and review. Speech: listen, record, transcribe, compare. Weak-point detection then focused review capsules. English-first product UI.',
+    stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'Expo'],
+    note: 'No live public demo. Product code is private.',
+  },
+  {
+    title: 'SCORM / LMS platform',
+    role: 'Full-stack engineer',
+    what: 'v1 is a SCORM player (upload and play packages, auth, storage, multimedia, learner progress). v2 (in progress) is the same product rebuilt as a TypeScript monorepo with a separate NestJS backend, web frontend, and mobile app: identity, background jobs, admin tools, contract and parity tests around the migration from v1.',
+    built:
+      'v1 in TanStack Start, Prisma, Better Auth, SCORM package parsing. v2 monorepo: NestJS API, Prisma / PostgreSQL, job workers, OpenAPI client generation, tests for backend, web, mobile, contracts, and migration parity.',
+    stack: [
+      'TypeScript',
+      'TanStack Start',
+      'NestJS',
+      'Prisma',
+      'PostgreSQL',
+      'Expo',
+      'Docker',
+      'Vitest',
+    ],
+    note: 'One product (v1 → v2). Repos are private.',
+  },
+  {
+    title: 'HonoClinic',
+    role: 'Full-stack engineer',
+    what: 'A public TypeScript app for clinic / patient management.',
+    built: '',
+    stack: [],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/allangmr/HonoClinic' },
+      { label: 'Live demo', href: 'https://hono-clinic.vercel.app' },
+    ],
+  },
+];
+---
+
+<section id="work" class="mx-auto max-w-3xl scroll-mt-24 px-6 py-14 sm:px-8 sm:py-16" aria-labelledby="work-heading">
+  <h2 id="work-heading" class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-subtle">
+    Selected work
+  </h2>
+  <ul class="mt-8 space-y-12" role="list">
+    {
+      projects.map((project) => (
+        <li class="border-t border-line pt-8">
+          <h3 class="text-xl font-semibold tracking-tight text-ink">{project.title}</h3>
+          <p class="mt-1 text-sm font-medium text-accent">{project.role}</p>
+          <div class="mt-4 space-y-3 text-base leading-relaxed text-ink-muted">
+            <p>
+              <span class="font-medium text-ink">What. </span>
+              {project.what}
+            </p>
+            {project.built && (
+              <p>
+                <span class="font-medium text-ink">Built. </span>
+                {project.built}
+              </p>
+            )}
+          </div>
+          {project.stack.length > 0 && (
+            <ul class="mt-4 flex flex-wrap gap-2" role="list" aria-label={`${project.title} stack`}>
+              {project.stack.map((tag) => (
+                <li class="rounded-md bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
+          {project.note && <p class="mt-4 text-sm text-ink-subtle">{project.note}</p>}
+          {project.links && project.links.length > 0 && (
+            <ul class="mt-4 flex flex-wrap gap-4 text-sm font-medium" role="list">
+              {project.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-accent underline-offset-4 transition-colors hover:text-accent-hover hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</section>

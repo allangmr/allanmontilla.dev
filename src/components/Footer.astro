@@ -1,0 +1,45 @@
+---
+const email = 'allangmr10@gmail.com';
+const links = [
+  { href: `mailto:${email}`, label: email, external: false },
+  {
+    href: 'https://www.linkedin.com/in/allan-montilla-00a756b3',
+    label: 'LinkedIn',
+    external: true,
+  },
+  { href: 'https://github.com/allangmr', label: 'GitHub', external: true },
+];
+---
+
+<footer id="contact" class="border-t border-line scroll-mt-24">
+  <div class="mx-auto max-w-3xl px-6 py-14 sm:px-8 sm:py-16">
+    <h2 class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-subtle">Contact</h2>
+    <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink-muted">
+      Panama · remote US/EU
+    </p>
+    <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-ink" role="list">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="transition-colors hover:text-accent"
+              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-6 text-sm text-ink-subtle">
+      <a
+        href={`mailto:${email}?subject=Resume%20request`}
+        class="underline-offset-4 hover:text-ink hover:underline"
+      >
+        Resume on request
+      </a>
+    </p>
+    <p class="mt-10 text-xs text-ink-subtle">© {new Date().getFullYear()} Allan Montilla</p>
+  </div>
+</footer>

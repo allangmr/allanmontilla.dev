@@ -1,0 +1,28 @@
+---
+const tags = [
+  'TypeScript',
+  'NestJS',
+  'React',
+  'Next.js',
+  'TanStack',
+  'Prisma',
+  'PostgreSQL',
+  'Expo',
+  'Docker',
+];
+---
+
+<section id="stack" class="mx-auto max-w-3xl px-6 py-10 sm:px-8 sm:py-12" aria-labelledby="stack-heading">
+  <h2 id="stack-heading" class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-subtle">
+    Stack
+  </h2>
+  <ul class="mt-5 flex flex-wrap gap-2" role="list">
+    {
+      tags.map((tag) => (
+        <li class="rounded-md border border-line bg-paper-elevated px-3 py-1.5 text-sm text-ink">
+          {tag}
+        </li>
+      ))
+    }
+  </ul>
+</section>
