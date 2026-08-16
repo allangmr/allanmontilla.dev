@@ -18,20 +18,26 @@ npm run build
 npm run preview
 ```
 
-`npm run build` writes a static site to `dist/`.
+`npm run build` writes a static site to `dist/`. Requires **Node.js >= 22.12** on your machine (not on the host).
 
-## Deploy on Vercel
+## Deploy on BanaHosting (cPanel)
 
-1. Push this repo to GitHub.
-2. In [Vercel](https://vercel.com), **Add New Project** and import the repo.
-3. Framework preset: **Astro** (or leave defaults). Build command `npm run build`, output `dist`.
-4. Deploy. No env vars required.
+The live site is static files in `public_html`. Build on your laptop, then upload.
 
-## Point allanmontilla.dev
+1. Merge or pull the latest `main`.
+2. Use Node.js **>= 22.12** locally.
+3. Install and build:
 
-1. In the Vercel project: **Settings → Domains** → add `allanmontilla.dev` (and `www` if you want).
-2. At your DNS provider, add the records Vercel shows (usually an `A` for the apex and/or a `CNAME` for `www`).
-3. Wait for DNS/SSL to finish, then set the apex as primary if both are connected.
+   ```bash
+   npm install
+   npm run build
+   ```
+
+4. **Backup** the current contents of `public_html` first (download a zip or copy aside in File Manager / FTP).
+5. Upload the **contents** of `dist/` into `public_html` — `index.html`, `_astro/`, favicons, etc. Do **not** upload a folder named `dist` itself; the files must sit at the root of `public_html`.
+6. No Node, env vars, or reverse proxy on the server. The host only serves static files.
+
+After upload, `https://allanmontilla.dev` should serve the new build.
 
 ## Contact
 
