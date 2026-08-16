@@ -2,8 +2,10 @@ import {
   BoxGeometry,
   CanvasTexture,
   Color,
+  LinearFilter,
   Mesh,
   MeshBasicMaterial,
+  NoBlending,
   OrthographicCamera,
   PlaneGeometry,
   Scene,
@@ -18,12 +20,17 @@ const SCENE_BG = 0x0f1821;
 const SHIP_SINK = 0.22;
 /** Plate-width scale ≈ 18–22% of canal width (was 0.26). */
 const SHIP_PLATE_SCALE = 0.17;
+/**
+ * Path delta so the ship center waits in the water in front of the gate
+ * (bow near the door) instead of sitting on top of the leaves.
+ */
+const GATE_STOP_BEFORE = 0.16;
 
 /** Z stack: plate → covers → ship (waiting) → gate leaves → ship (through) → FX */
 const Z_COVER = 0.004;
 const Z_SHIP_WAIT = 0.01;
-const Z_GATE = 0.018;
-const Z_SHIP_PASS = 0.028;
+const Z_GATE = 0.02;
+const Z_SHIP_PASS = 0.03;
 const Z_SHADOW = 0.006;
 const Z_WAKE = 0.007;
 
@@ -33,8 +40,10 @@ type LockGate = {
   cover: Mesh;
   left: Mesh;
   right: Mesh;
-  /** Path progress when ship must wait until open */
+  /** Path progress of the painted gate center */
   openAt: number;
+  /** Path progress where the ship center must wait (in front of gate) */
+  stopAt: number;
   /** Path progress when stern has cleared — start closing */
   closeAt: number;
   open: number; // 0 closed … 1 open
@@ -70,8 +79,8 @@ const WATER_UV: ReadonlyArray<readonly [number, number]> = [
  * Foreground = big concrete gates in the lower-left channel (concrete span ~t=0.92).
  */
 const LOCKS: ReadonlyArray<{ u: number; v: number; openAt: number; closeAt: number }> = [
-  { u: 0.585, v: 0.425, openAt: 0.36, closeAt: 0.52 },
-  { u: 0.358, v: 0.672, openAt: 0.78, closeAt: 0.92 },
+  { u: 0.585, v: 0.425, openAt: 0.4, closeAt: 0.56 },
+  { u: 0.358, v: 0.672, openAt: 0.82, closeAt: 0.94 },
 ];
 
 function prefersReducedMotion(): boolean {
@@ -93,6 +102,16 @@ function loadTexture(loader: TextureLoader, url: string): Promise<Texture> {
   });
 }
 
+function loadImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.decoding = 'sync';
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load ${url}`));
+    img.src = url;
+  });
+}
+
 /**
  * Bake ship.png to a hard-cutout opaque CanvasTexture.
  * Semi-transparent hull pixels are un-premultiplied and forced to alpha 255 so
@@ -104,7 +123,7 @@ function bakeOpaqueShipTexture(source: CanvasImageSource & { width: number; heig
   const canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true, alpha: true })!;
   ctx.clearRect(0, 0, w, h);
   ctx.drawImage(source, 0, 0);
 
@@ -131,7 +150,11 @@ function bakeOpaqueShipTexture(source: CanvasImageSource & { width: number; heig
 
   const tex = new CanvasTexture(canvas);
   tex.colorSpace = SRGBColorSpace;
-  tex.anisotropy = 4;
+  tex.premultiplyAlpha = false;
+  // Mipmaps average opaque ship pixels with empty alpha and create ghosting.
+  tex.generateMipmaps = false;
+  tex.minFilter = LinearFilter;
+  tex.magFilter = LinearFilter;
   tex.needsUpdate = true;
   return tex;
 }
@@ -214,6 +237,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     canvas,
     antialias: true,
     alpha: false,
+    premultipliedAlpha: false,
     powerPreference: 'high-performance',
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
@@ -228,19 +252,19 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
 
   // Water-colored covers hide painted-closed gates on the plate (canal teal/dark)
   const waterMat = new MeshBasicMaterial({
-    color: 0x1e2a32,
+    color: 0x1a262e,
     toneMapped: false,
     depthWrite: false,
   });
 
-  // Dark concrete / metal lock doors
+  // Dark concrete / metal lock doors spanning the channel
   const gateMat = new MeshBasicMaterial({
-    color: 0x3a424a,
+    color: 0x4a525c,
     toneMapped: false,
     depthWrite: true,
   });
   const gateEdgeMat = new MeshBasicMaterial({
-    color: 0x2a3036,
+    color: 0x353c44,
     toneMapped: false,
     depthWrite: true,
   });
@@ -251,17 +275,25 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     cover.renderOrder = 1;
     scene.add(cover);
 
-    const left = new Mesh(new BoxGeometry(1, 1, 0.12), gateMat.clone());
+    const left = new Mesh(new BoxGeometry(1, 1, 0.14), gateMat.clone());
     left.position.z = Z_GATE;
     left.renderOrder = 5;
     scene.add(left);
 
-    const right = new Mesh(new BoxGeometry(1, 1, 0.12), gateEdgeMat.clone());
+    const right = new Mesh(new BoxGeometry(1, 1, 0.14), gateEdgeMat.clone());
     right.position.z = Z_GATE;
     right.renderOrder = 5;
     scene.add(right);
 
-    return { cover, left, right, openAt: spec.openAt, closeAt: spec.closeAt, open: 0 };
+    return {
+      cover,
+      left,
+      right,
+      openAt: spec.openAt,
+      stopAt: Math.max(0.02, spec.openAt - GATE_STOP_BEFORE),
+      closeAt: spec.closeAt,
+      open: 0,
+    };
   });
 
   const shadowTex = makeShadowTexture();
@@ -292,13 +324,15 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   wake.visible = false;
   scene.add(wake);
 
-  // Solid ship — opaque map from bake + alphaTest cutout of empty background only
+  // Solid ship — opaque baked map, no blending, alphaTest cutout of empty background only
   const shipGeo = new PlaneGeometry(1, 1);
   const shipMat = new MeshBasicMaterial({
     transparent: false,
     opacity: 1,
     alphaTest: 0.5,
+    blending: NoBlending,
     depthWrite: true,
+    depthTest: true,
     toneMapped: false,
   });
   const ship = new Mesh(shipGeo, shipMat);
@@ -323,20 +357,20 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     LOCKS.forEach((spec, i) => {
       const lock = locks[i];
       const pos = uvToPlane(spec.u, spec.v, plateW, plateH);
-      const tangent = pathTangent(WATER_UV, (spec.openAt + spec.closeAt) / 2);
+      const tangent = pathTangent(WATER_UV, spec.openAt);
       const angle = Math.atan2(-tangent.y, tangent.x);
       const across = angle + Math.PI / 2;
 
-      // Large water patch fully hides painted-closed gate in the channel
-      const coverAcross = plateW * 0.175;
-      const coverAlong = plateH * 0.085;
+      // Large water patch hides painted-closed gate without covering the waiting ship
+      const coverAcross = plateW * 0.18;
+      const coverAlong = plateH * 0.055;
       lock.cover.position.set(pos.x, pos.y, Z_COVER);
       lock.cover.scale.set(coverAcross, coverAlong, 1);
       lock.cover.rotation.z = across;
 
-      // Thick lock-door leaves spanning the channel when closed
+      // Thick lock-door leaves spanning the full channel when closed
       const leafAcross = coverAcross * 0.5;
-      const leafAlong = coverAlong * 1.35;
+      const leafAlong = Math.max(coverAlong * 1.8, plateH * 0.07);
       lock.left.scale.set(leafAcross, leafAlong, 1);
       lock.right.scale.set(leafAcross, leafAlong, 1);
 
@@ -370,37 +404,31 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   };
 
   /**
-   * Open gates while the ship approaches / waits at openAt.
-   * Hard-stop keeps progress at openAt until open >= 0.9, so opening must
-   * begin on approach — not only after progress has already passed the gate.
+   * Open gates only once the ship is waiting at stopAt (in front of the door).
+   * Do not pre-open during approach — that let the hard-stop never engage.
    */
   const updateGates = (t: number, dt: number) => {
     for (const lock of locks) {
       let target = 0;
-      if (t >= lock.openAt - 0.12 && t <= lock.closeAt) {
-        if (t < lock.openAt) {
-          target = easeInOut((t - (lock.openAt - 0.12)) / 0.12);
-          // Once waiting at the door, finish opening fully
-          if (t >= lock.openAt - 0.002) target = 1;
-        } else {
-          target = 1;
-        }
+      if (t >= lock.stopAt && t <= lock.closeAt) {
+        target = 1;
       } else if (t > lock.closeAt && t < lock.closeAt + 0.1) {
         target = 1 - easeInOut((t - lock.closeAt) / 0.1);
       }
-      const speed = 1.8 * dt;
+      // Open a bit faster than travel so the wait is visible but not endless
+      const speed = (target > lock.open ? 1.35 : 2.0) * dt;
       if (lock.open < target) lock.open = Math.min(target, lock.open + speed);
       else if (lock.open > target) lock.open = Math.max(target, lock.open - speed);
       applyGateOpen(lock);
     }
   };
 
-  /** HARD STOP: progress cannot pass a lock's openAt until that lock is ≥ 90% open. */
+  /** HARD STOP: progress cannot pass stopAt until that lock is ≥ 90% open. */
   const hardStopProgress = (t: number): number => {
     let capped = t;
     for (const lock of locks) {
-      if (capped >= lock.openAt && lock.open < 0.9) {
-        capped = Math.min(capped, lock.openAt);
+      if (capped >= lock.stopAt && lock.open < 0.9) {
+        capped = Math.min(capped, lock.stopAt);
       }
     }
     return capped;
@@ -409,8 +437,8 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   /** Ship sits behind closed leaves; rises through the gap only when open. */
   const shipZForProgress = (t: number): number => {
     for (const lock of locks) {
-      const nearGate = t >= lock.openAt - 0.04 && t <= lock.closeAt;
-      if (nearGate && lock.open < 0.9) return Z_SHIP_WAIT;
+      const waitingOrAtGate = t >= lock.stopAt - 0.01 && t <= lock.openAt + 0.02;
+      if (waitingOrAtGate && lock.open < 0.9) return Z_SHIP_WAIT;
     }
     return Z_SHIP_PASS;
   };
@@ -546,30 +574,25 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
   const loader = new TextureLoader();
   void Promise.all([
     loadTexture(loader, '/scene/canal-hero.png'),
-    loadTexture(loader, '/scene/ship.png'),
+    loadImage('/scene/ship.png'),
   ])
-    .then(([heroTex, shipTex]) => {
+    .then(([heroTex, shipImg]) => {
       if (disposed) {
         heroTex.dispose();
-        shipTex.dispose();
         return;
       }
       plateMat.map = heroTex;
       plateMat.needsUpdate = true;
 
-      const src = shipTex.image as HTMLImageElement | ImageBitmap | HTMLCanvasElement;
-      const baked = bakeOpaqueShipTexture(src as CanvasImageSource & { width: number; height: number });
-      shipTex.dispose();
-
+      const baked = bakeOpaqueShipTexture(shipImg);
       shipMat.map = baked;
       shipMat.transparent = false;
       shipMat.opacity = 1;
       shipMat.alphaTest = 0.5;
+      shipMat.blending = NoBlending;
       shipMat.needsUpdate = true;
 
-      const iw = (src as { width: number }).width || 1536;
-      const ih = (src as { height: number }).height || 1024;
-      shipAspect = ih / iw;
+      shipAspect = shipImg.naturalHeight / shipImg.naturalWidth || 1024 / 1536;
 
       ship.visible = true;
       shadow.visible = true;
