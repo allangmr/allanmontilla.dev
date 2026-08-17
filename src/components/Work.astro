@@ -9,6 +9,12 @@ type WorkItem = {
 
 const projects: WorkItem[] = [
   {
+    title: 'Internal Messaging Platform and Training',
+    what: 'Internal messaging and training system for sharing videos, images, and other multimedia. Shipped work from my earlier site.',
+    stack: ['Vue', 'Laravel', 'PHP', 'MariaDB'],
+    note: 'Shipped.',
+  },
+  {
     title: 'LearnCapsule',
     what: 'AI practice companion for English and German. Users save words, phrases, and audio, then turn them into flashcards, pronunciation practice, quizzes, and review capsules.',
     stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'Expo'],
@@ -45,14 +51,16 @@ const projects: WorkItem[] = [
       Projects
     </h2>
 
-    <ul class="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-8" role="list">
+    <ul class="mt-10 grid gap-8 sm:grid-cols-2 lg:gap-8" role="list">
       {
         projects.map((project) => (
           <li class="border border-line bg-void/30 p-6 sm:p-7">
             <h3 class="font-display text-xl font-bold uppercase tracking-wide text-snow sm:text-2xl">
               {project.title}
             </h3>
-            <p class="mt-4 text-sm leading-relaxed text-snow-muted sm:text-[15px] sm:leading-[1.7]">{project.what}</p>
+            <p class="mt-4 text-sm leading-relaxed text-snow-muted sm:text-[15px] sm:leading-[1.7]">
+              {project.what}
+            </p>
             {project.stack.length > 0 && (
               <ul
                 class="mt-5 flex flex-wrap gap-2"
@@ -70,7 +78,10 @@ const projects: WorkItem[] = [
               <p class="mt-4 text-xs uppercase tracking-[0.16em] text-mist">{project.note}</p>
             )}
             {project.links && project.links.length > 0 && (
-              <ul class="mt-5 flex flex-wrap gap-4 text-xs font-semibold uppercase tracking-[0.2em]" role="list">
+              <ul
+                class="mt-5 flex flex-wrap gap-4 text-xs font-semibold uppercase tracking-[0.2em]"
+                role="list"
+              >
                 {project.links.map((link) => (
                   <li>
                     <a

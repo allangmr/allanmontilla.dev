@@ -48,3 +48,4 @@ After upload, `https://allanmontilla.dev` should serve the new build.
 - Email: [allangmr10@gmail.com](mailto:allangmr10@gmail.com)
 - LinkedIn: [allan-montilla](https://www.linkedin.com/in/allan-montilla-00a756b3)
 - GitHub: [allangmr](https://github.com/allangmr)
+- X: [allan_coding](https://x.com/allan_coding)

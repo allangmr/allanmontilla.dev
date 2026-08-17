@@ -6,10 +6,10 @@ interface Props {
   description?: string;
 }
 
-const title = Astro.props.title ?? 'Allan Montilla · Full-stack TypeScript engineer';
+const title = Astro.props.title ?? 'Allan Montilla · Web Developer & Software Engineer';
 const description =
   Astro.props.description ??
-  'Full-stack TypeScript engineer in Panama. LMS, SCORM, and AI learning products. Open to remote US/EU roles.';
+  'Hi, I’m Allan. Web developer & software engineer in Panama. I build product UIs with React, Next.js, and TypeScript. Open to remote US/EU roles.';
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og.svg', Astro.site).href;
 ---
