@@ -6,7 +6,7 @@ const links = [
 ];
 ---
 
-<header id="site-header" class="site-header" data-scrolled="false">
+<header id="site-header" class="site-header">
   <div class="site-header__inner">
     <a
       href="/"
@@ -52,15 +52,3 @@ const links = [
     </div>
   </div>
 </header>
-
-<script is:inline>
-  (() => {
-    const header = document.getElementById('site-header');
-    if (!header) return;
-    const sync = () => {
-      header.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false';
-    };
-    sync();
-    window.addEventListener('scroll', sync, { passive: true });
-  })();
-</script>
