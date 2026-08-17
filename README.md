@@ -1,8 +1,8 @@
 # allanmontilla.dev
 
-Personal site for Allan Montilla — dark cinematic Astro portfolio with a procedural Three.js Panama Canal hero.
+Personal site for Allan Montilla — dark cinematic Astro portfolio with a video-ready Panama Canal hero.
 
-Stack: **Astro** + TypeScript + Tailwind CSS + Three.js. Static output (`dist/`).
+Stack: **Astro** + TypeScript + Tailwind CSS. Static output (`dist/`).
 
 ## Run locally
 
@@ -19,6 +19,10 @@ npm run preview
 ```
 
 `npm run build` writes a static site to `dist/`. Requires **Node.js >= 22.12** on your machine (not on the host).
+
+## Hero video
+
+Drop a Grok (or other) MP4 at `public/hero.mp4`. Until then the hero uses `/scene/hero-poster.jpg` as a full-bleed poster. The `<video>` is muted, looping, and plays inline — missing media falls back to the poster without breaking the page.
 
 ## Deploy on BanaHosting (cPanel)
 

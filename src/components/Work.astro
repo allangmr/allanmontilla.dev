@@ -37,22 +37,22 @@ const projects: WorkItem[] = [
   class="scroll-mt-24 border-t border-line bg-void-elevated/40"
   aria-labelledby="work-heading"
 >
-  <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+  <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
     <h2
       id="work-heading"
-      class="font-display text-sm font-semibold uppercase tracking-[0.28em] text-accent"
+      class="font-display text-xs font-bold uppercase tracking-[0.28em] text-accent sm:text-sm"
     >
       Projects
     </h2>
 
-    <ul class="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-6" role="list">
+    <ul class="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-8" role="list">
       {
         projects.map((project) => (
           <li class="border border-line bg-void/30 p-6 sm:p-7">
-            <h3 class="font-display text-2xl font-bold uppercase tracking-wide text-snow">
+            <h3 class="font-display text-xl font-bold uppercase tracking-wide text-snow sm:text-2xl">
               {project.title}
             </h3>
-            <p class="mt-4 text-sm leading-relaxed text-snow-muted sm:text-[15px]">{project.what}</p>
+            <p class="mt-4 text-sm leading-relaxed text-snow-muted sm:text-[15px] sm:leading-[1.7]">{project.what}</p>
             {project.stack.length > 0 && (
               <ul
                 class="mt-5 flex flex-wrap gap-2"
