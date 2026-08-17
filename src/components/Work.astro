@@ -1,9 +1,7 @@
 ---
 type WorkItem = {
   title: string;
-  role: string;
   what: string;
-  built: string;
   stack: string[];
   note?: string;
   links?: { label: string; href: string }[];
@@ -12,37 +10,20 @@ type WorkItem = {
 const projects: WorkItem[] = [
   {
     title: 'LearnCapsule',
-    role: 'Full-stack engineer (product + platform)',
-    what: 'A web-first learning companion. Users save words, phrases, sentences, images, and audio from classes or self-study, then turn that material into flashcards, pronunciation practice, quizzes, matching, translation, and review capsules.',
-    built:
-      'Decoupled TypeScript backend and frontend, mobile in progress. AI flows that take a prompt such as "basic German greetings" and produce vocabulary, phrases, practice, and review. Speech: listen, record, transcribe, compare. Weak-point detection then focused review capsules. English-first product UI.',
+    what: 'AI practice companion for English and German. Users save words, phrases, and audio, then turn them into flashcards, pronunciation practice, quizzes, and review capsules.',
     stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'Expo'],
-    note: 'No live public demo. Product code is private.',
+    note: 'Private — no public demo.',
   },
   {
-    title: 'SCORM / LMS platform',
-    role: 'Full-stack engineer',
-    what: 'v1 is a SCORM player (upload and play packages, auth, storage, multimedia, learner progress). v2 (in progress) is the same product rebuilt as a TypeScript monorepo with a separate NestJS backend, web frontend, and mobile app: identity, background jobs, admin tools, contract and parity tests around the migration from v1.',
-    built:
-      'v1 in TanStack Start, Prisma, Better Auth, SCORM package parsing. v2 monorepo: NestJS API, Prisma / PostgreSQL, job workers, OpenAPI client generation, tests for backend, web, mobile, contracts, and migration parity.',
-    stack: [
-      'TypeScript',
-      'TanStack Start',
-      'NestJS',
-      'Prisma',
-      'PostgreSQL',
-      'Expo',
-      'Docker',
-      'Vitest',
-    ],
-    note: 'One product (v1 → v2). Repos are private.',
+    title: 'SCORM / LMS',
+    what: 'v1 is a TanStack Start SCORM player (auth, storage, multimedia, progress). v2 is the same product as a monorepo: NestJS API + web + mobile, with parity tests. One product, not two.',
+    stack: ['TypeScript', 'TanStack Start', 'NestJS', 'Prisma', 'PostgreSQL', 'Expo'],
+    note: 'Private.',
   },
   {
     title: 'HonoClinic',
-    role: 'Full-stack engineer',
-    what: 'A public TypeScript app for clinic / patient management.',
-    built: '',
-    stack: [],
+    what: 'Patient management for clinics — a public TypeScript app.',
+    stack: ['TypeScript', 'Hono'],
     links: [
       { label: 'GitHub', href: 'https://github.com/allangmr/HonoClinic' },
       { label: 'Live demo', href: 'https://hono-clinic.vercel.app' },
@@ -51,56 +32,62 @@ const projects: WorkItem[] = [
 ];
 ---
 
-<section id="work" class="mx-auto max-w-3xl scroll-mt-24 px-6 py-14 sm:px-8 sm:py-16" aria-labelledby="work-heading">
-  <h2 id="work-heading" class="text-sm font-semibold uppercase tracking-[0.08em] text-ink-subtle">
-    Selected work
-  </h2>
-  <ul class="mt-8 space-y-12" role="list">
-    {
-      projects.map((project) => (
-        <li class="border-t border-line pt-8">
-          <h3 class="text-xl font-semibold tracking-tight text-ink">{project.title}</h3>
-          <p class="mt-1 text-sm font-medium text-accent">{project.role}</p>
-          <div class="mt-4 space-y-3 text-base leading-relaxed text-ink-muted">
-            <p>
-              <span class="font-medium text-ink">What. </span>
-              {project.what}
-            </p>
-            {project.built && (
-              <p>
-                <span class="font-medium text-ink">Built. </span>
-                {project.built}
-              </p>
+<section
+  id="work"
+  class="scroll-mt-24 border-t border-line bg-void-elevated/40"
+  aria-labelledby="work-heading"
+>
+  <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
+    <h2
+      id="work-heading"
+      class="font-display text-sm font-semibold uppercase tracking-[0.28em] text-accent"
+    >
+      Projects
+    </h2>
+
+    <ul class="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-6" role="list">
+      {
+        projects.map((project) => (
+          <li class="border border-line bg-void/30 p-6 sm:p-7">
+            <h3 class="font-display text-2xl font-bold uppercase tracking-wide text-snow">
+              {project.title}
+            </h3>
+            <p class="mt-4 text-sm leading-relaxed text-snow-muted sm:text-[15px]">{project.what}</p>
+            {project.stack.length > 0 && (
+              <ul
+                class="mt-5 flex flex-wrap gap-2"
+                role="list"
+                aria-label={`${project.title} stack`}
+              >
+                {project.stack.map((tag) => (
+                  <li class="border border-line bg-accent-soft/40 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-snow-muted">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
             )}
-          </div>
-          {project.stack.length > 0 && (
-            <ul class="mt-4 flex flex-wrap gap-2" role="list" aria-label={`${project.title} stack`}>
-              {project.stack.map((tag) => (
-                <li class="rounded-md bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent">
-                  {tag}
-                </li>
-              ))}
-            </ul>
-          )}
-          {project.note && <p class="mt-4 text-sm text-ink-subtle">{project.note}</p>}
-          {project.links && project.links.length > 0 && (
-            <ul class="mt-4 flex flex-wrap gap-4 text-sm font-medium" role="list">
-              {project.links.map((link) => (
-                <li>
-                  <a
-                    href={link.href}
-                    class="text-accent underline-offset-4 transition-colors hover:text-accent-hover hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))
-    }
-  </ul>
+            {project.note && (
+              <p class="mt-4 text-xs uppercase tracking-[0.16em] text-mist">{project.note}</p>
+            )}
+            {project.links && project.links.length > 0 && (
+              <ul class="mt-5 flex flex-wrap gap-4 text-xs font-semibold uppercase tracking-[0.2em]" role="list">
+                {project.links.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      class="text-accent transition-colors hover:text-accent-hover"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {link.label} →
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>

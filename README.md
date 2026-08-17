@@ -1,8 +1,8 @@
 # allanmontilla.dev
 
-Personal site for Allan Montilla — a one-page Astro site for US/EU recruiters.
+Personal site for Allan Montilla — dark cinematic Astro portfolio with a procedural Three.js Panama Canal hero.
 
-Stack: **Astro** + TypeScript + Tailwind CSS. Static output (`dist/`).
+Stack: **Astro** + TypeScript + Tailwind CSS + Three.js. Static output (`dist/`).
 
 ## Run locally
 
