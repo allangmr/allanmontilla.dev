@@ -140,15 +140,15 @@ body {
 
 .site-header__logo {
   display: inline-flex;
-  height: 2rem;
+  height: 1.375rem;
   align-items: center;
   color: var(--color-snow);
 }
 
 .site-header__logo img {
-  height: 2rem;
+  height: 1.375rem;
   width: auto;
-  max-width: 7.5rem;
+  max-height: 1.375rem;
   object-fit: contain;
   object-position: left center;
   /* Avoid any baked edge reading as a frame on #0F1821 */
@@ -156,6 +156,17 @@ body {
   border: 0;
   box-shadow: none;
   outline: none;
+}
+
+@media (min-width: 640px) {
+  .site-header__logo {
+    height: 1.5rem;
+  }
+
+  .site-header__logo img {
+    height: 1.5rem;
+    max-height: 1.5rem;
+  }
 }
 
 .site-header__right {
