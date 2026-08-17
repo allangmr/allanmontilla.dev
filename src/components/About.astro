@@ -1,9 +1,35 @@
 ---
+const entries = [
+  {
+    label: 'Now',
+    org: 'Huge',
+    role: 'Senior Frontend Engineer',
+    years: 'Jul 2025–present',
+    certs: 'Adobe Commerce Developer Expert · Contentstack Developer',
+    body: 'Enterprise frontend on a team: AEM Classic → EDS, site search, financial calculators, 3D product configurators. Client brands stay off this page; happy to walk through the public surfaces in an interview.',
+  },
+  {
+    label: 'Earlier',
+    org: 'TIVIT LATAM',
+    role: 'Software Developer',
+    years: 'Feb 2019–Aug 2021',
+    certs: null,
+    body: 'Voting module for Federación Nacional de Cafeteros elections. Billing and repair-order software used by IDAAN Panama.',
+  },
+  {
+    label: 'Personal',
+    org: 'SoftwarePanama',
+    role: null,
+    years: null,
+    certs: null,
+    body: 'LearnCapsule, SCORM/LMS, HonoClinic.',
+  },
+] as const;
 ---
 
 <section
   id="about"
-  class="border-t border-line bg-void"
+  class="border-t border-line bg-void-elevated"
   aria-labelledby="about-heading"
 >
   <div class="mx-auto max-w-[1400px] px-5 pb-16 pt-32 sm:px-8 sm:pb-20 sm:pt-36 lg:px-12 lg:pb-24 lg:pt-40">
@@ -14,19 +40,50 @@
       >
         About
       </h2>
-      <div class="mt-10 space-y-6 text-base leading-relaxed text-snow-muted sm:mt-12 sm:text-lg sm:leading-[1.7]">
-        <p>Hi, I’m Allan. Nice to meet you.</p>
-        <p>
-          I’m passionate about building excellent web applications that improve the lives of those
-          around me. I specialize in creating web applications for clients ranging from individuals
-          and small businesses all the way to larger companies.
-        </p>
-        <p>
-          Based in Panama (and Mexico), I’m currently shipping TypeScript products — learning tools and
-          clinic software among them. Most of my current product code is private; I’m happy to walk
-          through it in an interview.
-        </p>
-      </div>
+
+      <p class="mt-10 text-base leading-relaxed text-snow sm:mt-12 sm:text-lg sm:leading-[1.7]">
+        Hi, I’m Allan. Nice to meet you.
+      </p>
+
+      <ul class="mt-12 space-y-12 sm:mt-14 sm:space-y-14" role="list">
+        {
+          entries.map((entry) => (
+            <li class="border-t border-line pt-6 sm:pt-7">
+              <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <span class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">
+                  {entry.label}
+                </span>
+                <span class="text-mist" aria-hidden="true">
+                  ·
+                </span>
+                <span class="font-display text-lg font-semibold tracking-tight text-snow sm:text-xl">
+                  {entry.org}
+                </span>
+              </div>
+
+              {(entry.role || entry.years) && (
+                <p class="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-[15px] text-snow sm:text-base">
+                  {entry.role && <span>{entry.role}</span>}
+                  {entry.role && entry.years && (
+                    <span class="text-mist" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
+                  {entry.years && <span class="text-sm text-mist sm:text-[15px]">{entry.years}</span>}
+                </p>
+              )}
+
+              {entry.certs && (
+                <p class="mt-1.5 text-[12px] leading-relaxed text-mist sm:text-[13px]">{entry.certs}</p>
+              )}
+
+              <p class="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-fog sm:mt-5 sm:text-base sm:leading-[1.7]">
+                {entry.body}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </section>
