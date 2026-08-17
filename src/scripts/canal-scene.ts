@@ -21,7 +21,7 @@ const SHIP_SINK = 0.22;
 /** Slightly under channel width so water shows on both sides. */
 const SHIP_PLATE_SCALE = 0.145;
 /** Path delta: ship center waits in water in front of the gate. */
-const GATE_STOP_BEFORE = 0.11;
+const GATE_STOP_BEFORE = 0.16;
 
 /** Z stack: plate → ship (waiting) → gate leaves → ship (through) → FX */
 const Z_SHIP_WAIT = 0.008;
@@ -384,8 +384,8 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     const across = Math.atan2(travelDir.y, travelDir.x) + Math.PI / 2;
 
     // Thin metal/concrete leaves spanning the water (not square diamonds)
-    const channelW = plateW * 0.1;
-    const doorThickness = plateH * 0.016;
+    const channelW = plateW * 0.082;
+    const doorThickness = plateH * 0.014;
     const leafW = channelW * 0.5;
     const leafH = doorThickness;
 
@@ -409,7 +409,7 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     const across = left.userData.across as number;
     const leafW = left.userData.leafW as number;
     // Slide straight into the banks (no yaw — keeps doors looking like lock leaves)
-    const slide = o * leafW * 1.15;
+    const slide = o * leafW * 1.35;
     left.position.x = left.userData.baseX - Math.cos(across) * slide;
     left.position.y = left.userData.baseY - Math.sin(across) * slide;
     right.position.x = right.userData.baseX + Math.cos(across) * slide;
@@ -418,6 +418,10 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     right.rotation.z = across;
     left.position.z = Z_GATE;
     right.position.z = Z_GATE;
+    // Fully recessed doors stay hidden so they never read as stray grey slabs on the ship
+    const show = o < 0.88;
+    left.visible = show;
+    right.visible = show;
   };
 
   const updateGate = (t: number, dt: number) => {
