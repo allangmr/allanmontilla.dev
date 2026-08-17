@@ -90,26 +90,26 @@ body {
   }
 }
 
-/* Sticky header: clear at top, thin frosted bar on scroll */
+/*
+  Anchor targets: scroll-margin on the id’d elements themselves.
+  (Tailwind scroll-mt utilities were present but not reliably clearing the fixed header.)
+*/
+#about,
+#work,
+#contact {
+  scroll-margin-top: 7.5rem;
+}
+
+/* Sticky header: always frosted. webkit BEFORE standard so LightningCSS keeps both. */
 .site-header {
   position: fixed;
   inset-inline: 0;
   top: 0;
   z-index: 40;
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition:
-    background-color 180ms ease,
-    border-color 180ms ease,
-    backdrop-filter 180ms ease,
-    -webkit-backdrop-filter 180ms ease;
-}
-
-.site-header[data-scrolled='true'] {
-  background: rgb(15 24 33 / 0.55);
-  border-bottom-color: rgb(217 215 215 / 0.1);
-  backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  background: rgb(15 24 33 / 0.8);
+  border-bottom: 1px solid rgb(217 215 215 / 0.1);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 
 .site-header__inner {
@@ -119,7 +119,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 1.25rem 1.25rem;
+  padding: 0.85rem 1.25rem;
 }
 
 @media (min-width: 640px) {
@@ -132,10 +132,6 @@ body {
   .site-header__inner {
     padding-inline: 3rem;
   }
-}
-
-.site-header[data-scrolled='true'] .site-header__inner {
-  padding-block: 0.85rem;
 }
 
 .site-header__logo {

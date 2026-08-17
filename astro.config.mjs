@@ -8,5 +8,10 @@ export default defineConfig({
   output: 'static',
   vite: {
     plugins: [tailwindcss()],
+    // Prevent LightningCSS from dropping -webkit-backdrop-filter (Safari)
+    // when Astro’s default cssTarget resolves to empty targets.
+    build: {
+      cssTarget: ['chrome111', 'edge111', 'firefox114', 'safari16.4', 'ios16.4'],
+    },
   },
 });
