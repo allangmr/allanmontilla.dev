@@ -171,10 +171,21 @@ function samplePath(points: ReadonlyArray<readonly [number, number]>, t: number)
   return new Vector2(a[0] + (b[0] - a[0]) * local, a[1] + (b[1] - a[1]) * local);
 }
 
-function pathTangent(points: ReadonlyArray<readonly [number, number]>, t: number): Vector2 {
+function pathTangentUV(points: ReadonlyArray<readonly [number, number]>, t: number): Vector2 {
   const a = samplePath(points, Math.max(0, t - 0.02));
   const b = samplePath(points, Math.min(1, t + 0.02));
   return b.sub(a).normalize();
+}
+
+/** Travel direction in plate XY (accounts for plate aspect). */
+function pathTangentPlane(
+  points: ReadonlyArray<readonly [number, number]>,
+  t: number,
+  plateW: number,
+  plateH: number,
+): Vector2 {
+  const uv = pathTangentUV(points, t);
+  return new Vector2(uv.x * plateW, -uv.y * plateH).normalize();
 }
 
 function uvToPlane(u: number, v: number, plateW: number, plateH: number): Vector2 {
@@ -368,14 +379,13 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
 
   const layoutLock = () => {
     const pos = uvToPlane(LOCK.u, LOCK.v, plateW, plateH);
-    const tangent = pathTangent(WATER_UV, LOCK.openAt);
-    // Angle of travel in plane XY; doors sit perpendicular across the channel
-    const travel = Math.atan2(-tangent.y, tangent.x);
-    const across = travel + Math.PI / 2;
+    const travelDir = pathTangentPlane(WATER_UV, LOCK.openAt, plateW, plateH);
+    // Doors sit perpendicular to travel — long axis across the channel
+    const across = Math.atan2(travelDir.y, travelDir.x) + Math.PI / 2;
 
-    // Channel-spanning doors: wide across water, thin along the path (not diamonds)
-    const channelW = plateW * 0.095;
-    const doorThickness = plateH * 0.022;
+    // Thin metal/concrete leaves spanning the water (not square diamonds)
+    const channelW = plateW * 0.1;
+    const doorThickness = plateH * 0.016;
     const leafW = channelW * 0.5;
     const leafH = doorThickness;
 
@@ -398,15 +408,14 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     const o = lock.open;
     const across = left.userData.across as number;
     const leafW = left.userData.leafW as number;
-    // Slide leaves into the banks; slight yaw as they recess
-    const slide = o * leafW * 1.05;
-    const swing = o * 0.2;
+    // Slide straight into the banks (no yaw — keeps doors looking like lock leaves)
+    const slide = o * leafW * 1.15;
     left.position.x = left.userData.baseX - Math.cos(across) * slide;
     left.position.y = left.userData.baseY - Math.sin(across) * slide;
     right.position.x = right.userData.baseX + Math.cos(across) * slide;
     right.position.y = right.userData.baseY + Math.sin(across) * slide;
-    left.rotation.z = across - swing;
-    right.rotation.z = across + swing;
+    left.rotation.z = across;
+    right.rotation.z = across;
     left.position.z = Z_GATE;
     right.position.z = Z_GATE;
   };
@@ -449,9 +458,9 @@ export function mountCanalScene(canvas: HTMLCanvasElement): SceneHandle {
     shadow.position.set(x + shipW * 0.02, sunkY - shipH * 0.3, Z_SHADOW);
     shadow.scale.set(shipW * 1.0, shipH * 0.42, 1);
 
-    const tangent = pathTangent(WATER_UV, t);
+    const tangent = pathTangentPlane(WATER_UV, t, plateW, plateH);
     const aftX = -tangent.x;
-    const aftY = tangent.y;
+    const aftY = -tangent.y;
     wake.position.set(
       x + aftX * shipW * 0.55,
       sunkY + aftY * shipH * 0.15 - shipH * 0.28,
