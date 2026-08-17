@@ -2,7 +2,6 @@
 const chips = [
   { label: 'TypeScript', icon: 'ts' },
   { label: 'NestJS', icon: 'nest' },
-  { label: 'Three.js', icon: 'three' },
 ];
 ---
 
@@ -10,61 +9,64 @@ const chips = [
   class="relative isolate min-h-[100svh] overflow-hidden bg-void"
   aria-labelledby="hero-heading"
 >
-  <!-- Scene layer — dominant right/center plane -->
+  <!-- Full-bleed video / poster layer — drop /hero.mp4 when ready -->
   <div class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
     <div
-      id="canal-scene-root"
-      class="absolute inset-x-0 top-[34%] h-[56%] sm:inset-y-0 sm:left-[22%] sm:right-0 sm:top-0 sm:h-full lg:left-[26%]"
+      class="absolute inset-0 bg-void bg-cover bg-center"
+      style="background-image: url('/scene/hero-poster.jpg')"
     >
-      <canvas id="canal-canvas" class="hero-fade h-full w-full [animation-delay:200ms]"></canvas>
-      <!-- Keep text legible on the left without veiling the ship on the right -->
-      <div
-        class="absolute inset-0 bg-gradient-to-r from-void from-5% via-void/50 via-[32%] to-transparent to-[58%] sm:from-10% sm:via-void/35 sm:via-[28%] sm:to-transparent sm:to-[52%]"
+      <video
+        class="hero-fade h-full w-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/scene/hero-poster.jpg"
       >
-      </div>
-      <div class="absolute inset-0 bg-gradient-to-t from-void/70 via-transparent via-40% to-void/35"></div>
-      <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-void to-transparent sm:h-36">
-      </div>
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
     </div>
 
-    <!-- Scene caption — mock placement, right of canal -->
-    <aside
-      class="absolute bottom-[28%] right-5 hidden max-w-[200px] text-left lg:right-10 lg:block xl:bottom-[30%] xl:right-12"
+    <!-- Left-to-right veil: darker ~40% for headline, clear on the right -->
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-void from-[8%] via-void/80 via-[32%] to-transparent to-[62%]"
     >
-      <p class="text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">Panama Canal</p>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-void/75 via-transparent via-45% to-void/40"></div>
+    <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-void to-transparent sm:h-36">
+    </div>
+
+    <aside
+      class="absolute bottom-[22%] right-5 hidden max-w-[200px] text-left lg:right-10 lg:block xl:bottom-[24%] xl:right-12"
+    >
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Panama Canal</p>
       <span class="mt-2.5 block h-px w-12 bg-accent" aria-hidden="true"></span>
-      <p class="mt-3 text-[12px] leading-relaxed text-snow/90">
+      <p class="mt-3 text-[13px] leading-relaxed text-snow/85">
         A symbol of connection, engineering and human ambition.
       </p>
-      <svg class="mt-3 h-4 w-4 text-accent" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <path
-          d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.2 4.5 8 4.5 8s4.5-4.8 4.5-8c0-2.5-2-4.5-4.5-4.5Z"
-          stroke="currentColor"
-          stroke-width="1.2"></path>
-        <circle cx="8" cy="6" r="1.35" fill="currentColor"></circle>
-      </svg>
     </aside>
   </div>
 
   <div
-    class="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col px-5 pb-7 pt-20 sm:px-8 sm:pb-9 sm:pt-24 lg:px-12 lg:pt-28"
+    class="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col px-5 pb-8 pt-24 sm:px-8 sm:pb-10 sm:pt-28 lg:px-12 lg:pt-32"
   >
-    <div class="flex flex-1 flex-col justify-center lg:max-w-[48%] lg:justify-start lg:pt-6 xl:max-w-[44%]">
-      <p class="hero-rise text-[11px] font-semibold uppercase tracking-[0.34em] text-accent">
-        Engineered for learning.
+    <div class="flex flex-1 flex-col justify-center lg:max-w-[50%] lg:justify-start lg:pt-4 xl:max-w-[46%]">
+      <p class="hero-rise text-xs font-semibold uppercase tracking-[0.32em] text-accent sm:text-[13px]">
+        Engineered for learning
       </p>
 
       <h1
         id="hero-heading"
-        class="hero-rise mt-4 font-display text-[clamp(3.75rem,12.5vw,7.5rem)] font-bold uppercase leading-[0.82] tracking-[-0.03em] [animation-delay:80ms]"
+        class="hero-rise mt-7 font-display text-[clamp(2.75rem,9vw,5.75rem)] font-bold uppercase leading-[1.02] tracking-[-0.02em] [animation-delay:80ms]"
       >
-        <span class="block text-snow">Building</span>
-        <span class="block text-mist">Products</span>
-        <span class="block text-snow">That Teach</span>
+        <span class="block whitespace-nowrap text-snow">Building</span>
+        <span class="block whitespace-nowrap text-mist">Products</span>
+        <span class="block whitespace-nowrap text-snow">That Teach</span>
       </h1>
 
       <p
-        class="hero-rise mt-5 max-w-[28rem] text-[15px] leading-relaxed text-snow-muted [animation-delay:140ms] sm:mt-6 sm:text-base"
+        class="hero-rise mt-8 max-w-[30rem] text-[15px] leading-relaxed text-snow-muted [animation-delay:140ms] sm:mt-9 sm:text-base sm:leading-[1.7]"
       >
         Full-stack TypeScript engineer in Panama. I ship LMS platforms, SCORM players, and AI
         language practice — APIs, web, and mobile. Open to remote US/EU roles.
@@ -72,7 +74,7 @@ const chips = [
 
       <a
         href="#work"
-        class="hero-rise group mt-7 inline-flex w-fit items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-accent transition-colors [animation-delay:200ms] hover:text-accent-hover sm:mt-8"
+        class="hero-rise group mt-9 inline-flex w-fit items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-accent transition-colors [animation-delay:200ms] hover:text-accent-hover sm:mt-10"
       >
         View work
         <span
@@ -82,13 +84,13 @@ const chips = [
       </a>
 
       <ul
-        class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-medium uppercase tracking-[0.24em] text-snow/80 sm:mt-6 sm:text-[11px]"
+        class="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-medium uppercase tracking-[0.22em] text-snow/80 sm:mt-8"
         role="list"
         aria-label="Core tools"
       >
         {
           chips.map((chip, i) => (
-            <li class="flex items-center gap-3">
+            <li class="flex items-center gap-4">
               {i > 0 && <span class="h-3 w-px bg-line-strong" aria-hidden="true" />}
               <span class="inline-flex items-center gap-2">
                 {chip.icon === 'ts' && (
@@ -106,21 +108,6 @@ const chips = [
                     />
                   </svg>
                 )}
-                {chip.icon === 'three' && (
-                  <svg class="h-3.5 w-3.5 text-snow/60" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path
-                      d="M8 2 14 5.5v5L8 14 2 10.5v-5L8 2Z"
-                      stroke="currentColor"
-                      stroke-width="1.2"
-                    />
-                    <path
-                      d="M8 2v12M2 5.5l6 3.5 6-3.5"
-                      stroke="currentColor"
-                      stroke-width="1"
-                      opacity="0.7"
-                    />
-                  </svg>
-                )}
                 {chip.label}
               </span>
             </li>
@@ -128,93 +115,30 @@ const chips = [
         }
       </ul>
 
-      <aside class="mt-7 max-w-xs lg:hidden">
-        <p class="text-[10px] font-semibold uppercase tracking-[0.28em] text-accent">Panama Canal</p>
+      <aside class="mt-10 max-w-xs lg:hidden">
+        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Panama Canal</p>
         <span class="mt-2 block h-px w-12 bg-accent" aria-hidden="true"></span>
-        <p class="mt-2 text-xs leading-relaxed text-fog">
+        <p class="mt-2.5 text-sm leading-relaxed text-fog">
           A symbol of connection, engineering and human ambition.
         </p>
-        <svg class="mt-2 h-3.5 w-3.5 text-accent" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path
-            d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.2 4.5 8 4.5 8s4.5-4.8 4.5-8c0-2.5-2-4.5-4.5-4.5Z"
-            stroke="currentColor"
-            stroke-width="1.2"></path>
-          <circle cx="8" cy="6" r="1.35" fill="currentColor"></circle>
-        </svg>
       </aside>
     </div>
 
-    <div class="min-h-[36vh] flex-1 sm:min-h-0 lg:flex-none" aria-hidden="true"></div>
+    <div class="min-h-[28vh] flex-1 sm:min-h-0 lg:flex-none" aria-hidden="true"></div>
 
-    <div
-      class="relative z-10 mt-auto flex flex-col gap-5 pt-2 sm:flex-row sm:items-end sm:justify-between sm:gap-10"
-    >
+    <div class="relative z-10 mt-auto flex flex-col gap-3 pt-4 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
       <div class="max-w-md">
-        <p class="font-script text-[1.35rem] leading-tight text-snow sm:text-[1.65rem]">
+        <p class="font-script text-[1.4rem] leading-snug text-snow sm:text-[1.7rem]">
           Let's build something that gets noticed.
         </p>
-        <p class="mt-2.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-accent">
+        <p class="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
           Available for new opportunities
         </p>
       </div>
 
-      <article class="max-w-sm border border-line-strong bg-transparent p-4 sm:p-5">
-        <div class="flex items-start gap-3">
-          <svg
-            class="mt-0.5 h-5 w-5 shrink-0 text-snow/75"
-            viewBox="0 0 20 20"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M10 2.5 17 6.5v7l-7 4-7-4v-7l7-4Z"
-              stroke="currentColor"
-              stroke-width="1.1"></path>
-            <path
-              d="M10 2.5v15M3 6.5l7 4 7-4"
-              stroke="currentColor"
-              stroke-width="1"
-              opacity="0.7"></path>
-          </svg>
-          <div>
-            <h2 class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">
-              Interactive by design
-            </h2>
-            <p class="mt-2 text-xs leading-relaxed text-snow-muted">
-              A Panama Canal lock scene: a container ship moving through dark water between the
-              mountains — interactive signature for the hero.
-            </p>
-            <a
-              href="https://github.com/allangmr/allanmontilla.dev"
-              class="mt-3 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-accent transition-colors hover:text-accent-hover"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              See the code
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-      </article>
+      <p class="max-w-xs text-[11px] leading-relaxed tracking-wide text-mist sm:text-right sm:text-xs">
+        Cinematic Panama Canal hero — video landing soon.
+      </p>
     </div>
   </div>
 </section>
-
-<script>
-  const boot = async () => {
-    const canvas = document.getElementById('canal-canvas');
-    if (!(canvas instanceof HTMLCanvasElement)) return;
-    const { mountCanalScene } = await import('../scripts/canal-scene');
-    const handle = mountCanalScene(canvas);
-    window.addEventListener(
-      'astro:before-swap',
-      () => {
-        handle.destroy();
-      },
-      { once: true },
-    );
-  };
-
-  // Start immediately — do not wait on requestIdleCallback / window load
-  void boot();
-</script>
