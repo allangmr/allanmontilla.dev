@@ -9,22 +9,22 @@ type WorkItem = {
 
 const projects: WorkItem[] = [
   {
-    title: 'Internal Messaging Platform and Training',
+    title: 'Internal messaging platform and training',
     what: 'Internal messaging and training system for sharing videos, images, and other multimedia. Shipped work from my earlier site.',
     stack: ['Vue', 'Laravel', 'PHP', 'MariaDB'],
-    note: 'Shipped.',
+    note: 'Shipped',
   },
   {
     title: 'LearnCapsule',
     what: 'AI practice companion for English and German. Users save words, phrases, and audio, then turn them into flashcards, pronunciation practice, quizzes, and review capsules.',
     stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'Expo'],
-    note: 'Private — no public demo.',
+    note: 'Private — no public demo',
   },
   {
     title: 'SCORM / LMS',
     what: 'v1 is a TanStack Start SCORM player (auth, storage, multimedia, progress). v2 is the same product as a monorepo: NestJS API + web + mobile, with parity tests. One product, not two.',
     stack: ['TypeScript', 'TanStack Start', 'NestJS', 'Prisma', 'PostgreSQL', 'Expo'],
-    note: 'Private.',
+    note: 'Private',
   },
   {
     title: 'HonoClinic',
@@ -40,7 +40,7 @@ const projects: WorkItem[] = [
 
 <section
   id="work"
-  class="scroll-mt-24 border-t border-line bg-void-elevated/40"
+  class="scroll-mt-32 border-t border-line bg-void-elevated/40"
   aria-labelledby="work-heading"
 >
   <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
@@ -51,46 +51,40 @@ const projects: WorkItem[] = [
       Projects
     </h2>
 
-    <ul class="mt-10 grid gap-8 sm:grid-cols-2 lg:gap-8" role="list">
+    <ul class="mt-12 grid gap-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-14 lg:mt-14" role="list">
       {
         projects.map((project) => (
-          <li class="border border-line bg-void/30 p-6 sm:p-7">
-            <h3 class="font-display text-xl font-bold uppercase tracking-wide text-snow sm:text-2xl">
-              {project.title}
-            </h3>
-            <p class="mt-4 text-sm leading-relaxed text-snow-muted sm:text-[15px] sm:leading-[1.7]">
+          <li class="max-w-[65ch] border-t border-line pt-6">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+              <h3 class="font-display text-xl font-semibold tracking-tight text-snow sm:text-2xl">
+                {project.title}
+              </h3>
+              {project.note && (
+                <p class="text-[11px] tracking-wide text-mist">{project.note}</p>
+              )}
+            </div>
+            <p class="mt-5 text-[15px] leading-relaxed text-snow-muted sm:mt-6 sm:text-base sm:leading-[1.7]">
               {project.what}
             </p>
             {project.stack.length > 0 && (
-              <ul
-                class="mt-5 flex flex-wrap gap-2"
-                role="list"
+              <p
+                class="mt-5 text-[12px] leading-relaxed text-mist sm:mt-6"
                 aria-label={`${project.title} stack`}
               >
-                {project.stack.map((tag) => (
-                  <li class="border border-line bg-accent-soft/40 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-snow-muted">
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {project.note && (
-              <p class="mt-4 text-xs uppercase tracking-[0.16em] text-mist">{project.note}</p>
+                {project.stack.join(' · ')}
+              </p>
             )}
             {project.links && project.links.length > 0 && (
-              <ul
-                class="mt-5 flex flex-wrap gap-4 text-xs font-semibold uppercase tracking-[0.2em]"
-                role="list"
-              >
+              <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm sm:mt-6" role="list">
                 {project.links.map((link) => (
                   <li>
                     <a
                       href={link.href}
-                      class="text-accent transition-colors hover:text-accent-hover"
+                      class="text-accent underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent-hover hover:decoration-accent-hover"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {link.label} →
+                      {link.label}
                     </a>
                   </li>
                 ))}
