@@ -4,6 +4,7 @@ type WorkItem = {
   what: string;
   stack: string[];
   note?: string;
+  image?: { src: string; alt: string };
   links?: { label: string; href: string }[];
 };
 
@@ -17,7 +18,11 @@ const projects: WorkItem[] = [
   {
     title: 'LearnCapsule',
     what: 'AI practice companion for English and German. Users save words, phrases, and audio, then turn them into flashcards, pronunciation practice, quizzes, and review capsules.',
-    stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'Expo'],
+    stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'React Native', 'Expo'],
+    image: {
+      src: '/projects/learncapsule.png',
+      alt: 'LearnCapsule sign-in screen with capsule illustration',
+    },
     links: [
       { label: 'Live demo', href: 'https://learncapsule.softwarepanama.com' },
     ],
@@ -26,6 +31,10 @@ const projects: WorkItem[] = [
     title: 'SCORM / LMS',
     what: 'v1 is a TanStack Start SCORM player (auth, storage, multimedia, progress). v2 is the same product as a monorepo: NestJS API + web + mobile, with parity tests. One product, not two.',
     stack: ['TypeScript', 'TanStack Start', 'NestJS', 'Prisma', 'PostgreSQL', 'Expo'],
+    image: {
+      src: '/projects/lms-v2.png',
+      alt: 'TropicLearn LMS v2 marketing hero and feature grid',
+    },
     links: [
       { label: 'Scorm Platform v1', href: 'https://lms.grusetec.com' },
       { label: 'New LMS v2', href: 'https://new-lms.softwarepanama.com' },
@@ -35,9 +44,25 @@ const projects: WorkItem[] = [
     title: 'HonoClinic',
     what: 'Patient management for clinics — a public TypeScript app.',
     stack: ['TypeScript', 'Hono'],
+    image: {
+      src: '/projects/honoclinic.png',
+      alt: 'HonoClinic CarePulse appointment scheduling landing page',
+    },
     links: [
       { label: 'GitHub', href: 'https://github.com/allangmr/HonoClinic' },
       { label: 'Live demo', href: 'https://hono-clinic.vercel.app' },
+    ],
+  },
+  {
+    title: 'MrCriptoNite',
+    what: 'Next.js site for a crypto creator. Store accepts card or crypto (Shopify API). Airdrop module lets people buy participations with crypto. Also an admin panel and dashboard.',
+    stack: ['Next.js', 'TypeScript', 'Shopify'],
+    image: {
+      src: '/projects/mrcriptonite.png',
+      alt: 'MrCriptoNite crypto airdrop participation page',
+    },
+    links: [
+      { label: 'Live', href: 'https://mrcriptonite.com' },
     ],
   },
 ];
@@ -60,6 +85,19 @@ const projects: WorkItem[] = [
       {
         projects.map((project) => (
           <li class="max-w-[65ch] border-t border-line pt-6">
+            {project.image && (
+              <div class="mb-6 overflow-hidden rounded-xl border border-line">
+                <img
+                  src={project.image.src}
+                  alt={project.image.alt}
+                  width="1440"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[16/10] w-full object-cover"
+                />
+              </div>
+            )}
             <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
               <h3 class="font-display text-xl font-semibold tracking-tight text-snow sm:text-2xl">
                 {project.title}
