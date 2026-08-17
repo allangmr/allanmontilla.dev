@@ -42,7 +42,7 @@ body {
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: clip;
+  /* Do not set overflow-x on body — it disables backdrop-filter on the fixed header */
 }
 
 :focus-visible {
