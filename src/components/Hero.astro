@@ -3,7 +3,7 @@ const chips = ['TypeScript', 'React', 'Next.js'];
 ---
 
 <section
-  class="relative isolate min-h-[100svh] overflow-hidden bg-void"
+  class="hero relative isolate min-h-[100svh] overflow-hidden bg-void"
   aria-labelledby="hero-heading"
 >
   <!-- Full-bleed video / poster layer -->
@@ -25,7 +25,6 @@ const chips = ['TypeScript', 'React', 'Next.js'];
       </video>
     </div>
 
-    <!-- Left-to-right veil: darker for headline, clear on the right -->
     <div
       class="absolute inset-0 bg-gradient-to-r from-void from-[8%] via-void/80 via-[32%] to-transparent to-[62%]"
     >
@@ -35,10 +34,8 @@ const chips = ['TypeScript', 'React', 'Next.js'];
     </div>
   </div>
 
-  <!-- Canal caption lives above video + veils so it never washes into footage -->
-  <aside
-    class="pointer-events-none absolute bottom-[22%] right-5 z-20 hidden max-w-[220px] text-left lg:right-10 lg:block xl:bottom-[24%] xl:right-12"
-  >
+  <!-- Canal caption above video + veils -->
+  <aside class="hero-canal pointer-events-none absolute z-20 hidden text-left lg:block">
     <div class="flex items-start gap-2">
       <svg
         class="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent"
@@ -63,28 +60,26 @@ const chips = ['TypeScript', 'React', 'Next.js'];
     </div>
   </aside>
 
-  <div
-    class="relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col px-5 pb-12 pt-28 sm:px-8 sm:pb-14 sm:pt-32 lg:px-12 lg:pb-16 lg:pt-36"
-  >
-    <div class="flex flex-1 flex-col justify-center pb-6 lg:max-w-[50%] lg:justify-start lg:pb-8 lg:pt-2 xl:max-w-[46%]">
+  <div class="hero-shell relative z-10 mx-auto flex min-h-[100svh] max-w-[1440px] flex-col">
+    <div class="hero-copy lg:max-w-[50%] xl:max-w-[46%]">
       <p class="hero-rise text-xs font-semibold uppercase tracking-[0.32em] text-accent sm:text-[13px]">
         Web developer &amp; software engineer.
       </p>
 
       <h1
         id="hero-heading"
-        class="hero-rise mt-8 font-display text-[clamp(2.5rem,7.5vw,4.75rem)] font-bold uppercase leading-[0.98] tracking-[-0.02em] [animation-delay:80ms]"
+        class="hero-rise hero-title font-display font-bold uppercase leading-[0.98] tracking-[-0.02em] [animation-delay:80ms]"
       >
         <span class="block whitespace-nowrap text-snow">Building</span>
         <span class="block whitespace-nowrap text-mist">Interfaces</span>
         <span class="block whitespace-nowrap text-snow">That Last</span>
       </h1>
 
-      <span class="hero-rise mt-7 block h-px w-14 bg-accent [animation-delay:110ms]" aria-hidden="true"
+      <span class="hero-rise hero-rule mt-6 block h-px w-14 bg-accent [animation-delay:110ms]" aria-hidden="true"
       ></span>
 
       <p
-        class="hero-rise mt-7 max-w-[36rem] text-[15px] leading-relaxed text-snow-muted [animation-delay:140ms] sm:mt-8 sm:text-base sm:leading-[1.7]"
+        class="hero-rise hero-lede mt-6 max-w-[36rem] text-[15px] leading-relaxed text-snow-muted [animation-delay:140ms] sm:text-base sm:leading-[1.7]"
       >
         Hi, I’m Allan. I build product UIs that survive real users — React, Next.js, and TypeScript,
         from Panama. Open to remote US/EU roles.
@@ -92,7 +87,7 @@ const chips = ['TypeScript', 'React', 'Next.js'];
 
       <a
         href="#work"
-        class="hero-rise group mt-9 inline-flex min-h-11 w-fit items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-accent transition-colors duration-200 [animation-delay:200ms] hover:text-accent-hover sm:mt-10"
+        class="hero-rise hero-cta group mt-8 inline-flex min-h-11 w-fit items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-accent transition-colors duration-200 [animation-delay:200ms] hover:text-accent-hover"
       >
         View work
         <span
@@ -102,7 +97,7 @@ const chips = ['TypeScript', 'React', 'Next.js'];
       </a>
 
       <ul
-        class="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-medium uppercase tracking-[0.22em] text-snow/80 sm:mt-9"
+        class="hero-chips mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-medium uppercase tracking-[0.22em] text-snow/80"
         role="list"
         aria-label="Core tools"
       >
@@ -116,7 +111,7 @@ const chips = ['TypeScript', 'React', 'Next.js'];
         }
       </ul>
 
-      <aside class="mt-10 max-w-xs lg:hidden">
+      <aside class="hero-canal-mobile mt-8 max-w-xs lg:hidden">
         <p class="text-xs font-semibold uppercase tracking-[0.28em] text-accent">Panama Canal</p>
         <span class="mt-2.5 block h-px w-12 bg-accent" aria-hidden="true"></span>
         <p class="mt-3 text-sm leading-relaxed text-fog">
@@ -125,14 +120,12 @@ const chips = ['TypeScript', 'React', 'Next.js'];
       </aside>
     </div>
 
-    <div class="min-h-[12vh] flex-1 sm:min-h-[8vh] lg:min-h-0 lg:flex-none" aria-hidden="true"></div>
-
-    <div class="relative z-10 mt-auto flex flex-col gap-6 pt-6 sm:flex-row sm:items-end sm:justify-between sm:gap-10 sm:pt-8">
+    <div class="hero-footer relative z-10 mt-auto flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
       <div class="max-w-md">
-        <p class="font-script text-[1.4rem] leading-snug text-snow sm:text-[1.7rem]">
+        <p class="font-script text-[1.35rem] leading-snug text-snow sm:text-[1.6rem]">
           Let's build something that gets noticed.
         </p>
-        <p class="mt-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
+        <p class="mt-2.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-accent">
           Available for new opportunities
         </p>
       </div>
@@ -141,7 +134,7 @@ const chips = ['TypeScript', 'React', 'Next.js'];
         href="https://github.com/allangmr"
         target="_blank"
         rel="noopener noreferrer"
-        class="group flex max-w-sm items-start gap-4 border border-snow/25 px-4 py-4 transition-colors duration-200 hover:border-accent sm:px-5 sm:py-5"
+        class="hero-panama-card group flex max-w-sm items-start gap-4 border border-snow/25 px-4 py-4 transition-colors duration-200 hover:border-accent sm:px-5 sm:py-4"
       >
         <svg
           class="mt-0.5 h-5 w-5 shrink-0 text-accent"
@@ -162,7 +155,7 @@ const chips = ['TypeScript', 'React', 'Next.js'];
           >
             Built from Panama
           </span>
-          <span class="mt-2 block text-[12px] leading-relaxed text-snow-muted sm:text-[13px]">
+          <span class="hero-panama-card__body mt-2 block text-[12px] leading-relaxed text-snow-muted sm:text-[13px]">
             I design and ship web products from Panama — interfaces first, then the APIs and mobile
             around them.
           </span>

@@ -6,59 +6,46 @@ const links = [
 ];
 ---
 
-<header
-  id="site-header"
-  class="site-header fixed inset-x-0 top-0 z-40 transition-[background-color,backdrop-filter,border-color] duration-200"
->
-  <div
-    class="mx-auto flex max-w-[1400px] items-center justify-between gap-6 px-5 py-6 sm:px-8 lg:px-12"
-  >
+<header id="site-header" class="site-header" data-scrolled="false">
+  <div class="site-header__inner">
     <a
       href="/"
-      class="group inline-flex h-8 items-center text-snow"
+      class="site-header__logo"
       aria-current="page"
       aria-label="Allan Montilla home"
     >
       <img
-        src="/logo-ia-transparent.png"
+        src="/logo-ia-clean.png"
         alt=""
-        width="1100"
-        height="750"
-        class="h-8 w-auto max-w-[7.5rem] object-contain object-left"
+        width="1006"
+        height="736"
         decoding="async"
       />
       <span class="sr-only">Allan Montilla</span>
     </a>
 
-    <div class="flex items-center gap-5 sm:gap-8">
+    <div class="site-header__right">
       <nav aria-label="Primary">
-        <ul
-          class="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.2em] text-snow-muted sm:gap-2 sm:text-[13px]"
-        >
+        <ul class="site-header__nav">
           {
             links.map((link, i) => (
-              <li class="flex items-center gap-1 sm:gap-2">
+              <li>
                 {i > 0 && (
-                  <span class="text-mist/70" aria-hidden="true">
+                  <span class="site-header__dot" aria-hidden="true">
                     ·
                   </span>
                 )}
-                <a
-                  href={link.href}
-                  class="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-accent"
-                >
-                  {link.label}
-                </a>
+                <a href={link.href}>{link.label}</a>
               </li>
             ))
           }
         </ul>
       </nav>
 
-      <div class="hidden grid-cols-3 gap-1 sm:grid" aria-hidden="true">
+      <div class="site-header__grid" aria-hidden="true">
         {
           Array.from({ length: 9 }).map(() => (
-            <span class="h-1 w-1 rounded-full bg-snow/55" />
+            <span />
           ))
         }
       </div>
@@ -66,27 +53,14 @@ const links = [
   </div>
 </header>
 
-<style>
-  .site-header {
-    background: transparent;
-    border-bottom: 1px solid transparent;
-  }
-
-  .site-header.is-scrolled {
-    background: rgb(15 24 33 / 0.72);
-    border-bottom-color: rgb(217 215 215 / 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-</style>
-
-<script>
-  const header = document.getElementById('site-header');
-  if (header) {
+<script is:inline>
+  (() => {
+    const header = document.getElementById('site-header');
+    if (!header) return;
     const sync = () => {
-      header.classList.toggle('is-scrolled', window.scrollY > 16);
+      header.dataset.scrolled = window.scrollY > 12 ? 'true' : 'false';
     };
     sync();
     window.addEventListener('scroll', sync, { passive: true });
-  }
+  })();
 </script>
