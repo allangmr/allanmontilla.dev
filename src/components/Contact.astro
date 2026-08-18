@@ -16,41 +16,45 @@ const socials = [
   aria-labelledby="contact-heading"
 >
   <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-    <div class="max-w-[65ch]">
-      <h2
-        id="contact-heading"
-        class="font-display text-xs font-bold uppercase tracking-[0.28em] text-accent sm:text-sm"
-      >
-        Contact
-      </h2>
+    <div class="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-16 xl:gap-x-24">
+      <header class="lg:col-span-4">
+        <h2
+          id="contact-heading"
+          class="font-display text-xs font-bold uppercase tracking-[0.28em] text-accent sm:text-sm"
+        >
+          Contact
+        </h2>
 
-      <p class="mt-8 text-base leading-relaxed text-snow sm:mt-10 sm:text-lg">
-        Panama · Available for new opportunities
-      </p>
+        <p class="mt-8 text-base leading-relaxed text-snow sm:mt-10 sm:text-lg">
+          Panama · Available for new opportunities
+        </p>
+      </header>
 
-      <a
-        href={`mailto:${email}`}
-        class="mt-6 inline-block font-display text-2xl font-semibold tracking-tight text-snow underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent hover:decoration-accent sm:mt-8 sm:text-3xl sm:leading-tight"
-      >
-        {email}
-      </a>
+      <div class="mt-8 lg:col-span-8 lg:mt-0">
+        <a
+          href={`mailto:${email}`}
+          class="inline-block font-display text-2xl font-semibold tracking-tight text-snow underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent hover:decoration-accent sm:text-3xl sm:leading-tight"
+        >
+          {email}
+        </a>
 
-      <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-3 text-base text-snow sm:mt-8 sm:text-lg" role="list">
-        {
-          socials.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent hover:decoration-accent"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+        <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-3 text-base text-snow sm:mt-8 sm:text-lg" role="list">
+          {
+            socials.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent hover:decoration-accent"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   </div>
 </section>

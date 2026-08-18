@@ -18,10 +18,10 @@ type AlsoItem = {
 const projects: WorkItem[] = [
   {
     title: 'LearnCapsule',
-    what: 'AI practice companion for English and German. Users save words, phrases, and audio, then turn them into flashcards, pronunciation practice, quizzes, and review capsules.',
+    what: 'Live demo for English and German practice — flashcards, audio, and quizzes. TypeScript with React Native/Expo.',
     stack: ['TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'React', 'React Native', 'Expo'],
     image: {
-      src: '/projects/learncapsule.png',
+      src: '/projects/learncapsule.jpg',
       alt: 'LearnCapsule sign-in screen with capsule illustration',
     },
     links: [
@@ -30,10 +30,10 @@ const projects: WorkItem[] = [
   },
   {
     title: 'SCORM / LMS',
-    what: 'v1 is a TanStack Start SCORM player (auth, storage, multimedia, progress). v2 is the same product as a monorepo: NestJS API + web + mobile, with parity tests. One product, not two.',
+    what: 'One product, two live versions: v1 at lms.grusetec.com and v2 TropicLearn at new-lms.softwarepanama.com.',
     stack: ['TypeScript', 'TanStack Start', 'NestJS', 'Prisma', 'PostgreSQL', 'Expo'],
     image: {
-      src: '/projects/lms-v2.png',
+      src: '/projects/lms-v2.jpg',
       alt: 'TropicLearn LMS v2 marketing hero and feature grid',
     },
     links: [
@@ -43,10 +43,10 @@ const projects: WorkItem[] = [
   },
   {
     title: 'HonoClinic',
-    what: 'Patient management for clinics — a public TypeScript app.',
+    what: 'Public clinic app for patient management, with a live demo and source on GitHub.',
     stack: ['TypeScript', 'Hono'],
     image: {
-      src: '/projects/honoclinic.png',
+      src: '/projects/honoclinic.jpg',
       alt: 'HonoClinic CarePulse appointment scheduling landing page',
     },
     links: [
@@ -56,10 +56,10 @@ const projects: WorkItem[] = [
   },
   {
     title: 'MrCriptoNite',
-    what: 'Next.js site for a crypto creator. Store accepts card or crypto (Shopify API). Airdrop module lets people buy participations with crypto. Also an admin panel and dashboard.',
+    what: 'Live Next.js store at mrcriptonite.com — card or crypto checkout via Shopify, plus an airdrop module and admin/dashboard.',
     stack: ['Next.js', 'TypeScript', 'Shopify'],
     image: {
-      src: '/projects/mrcriptonite.png',
+      src: '/projects/mrcriptonite.jpg',
       alt: 'MrCriptoNite merch store, Diamond Hands collection',
     },
     links: [
@@ -78,7 +78,7 @@ const alsoShipped: AlsoItem[] = [
   {
     title: 'Huge',
     detail:
-      'Team work (unnamed clients): AEM Classic → EDS migrations, site search, financial calculators, 3D product configurators.',
+      'Team enterprise frontend. AEM Classic → EDS migrations, site search, financial calculators, 3D product configurators. Client brands stay off this page.',
   },
   {
     title: 'TIVIT LATAM',
@@ -104,14 +104,14 @@ const alsoShipped: AlsoItem[] = [
     <ul class="mt-12 grid gap-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-14 lg:mt-14" role="list">
       {
         projects.map((project) => (
-          <li class="max-w-[65ch] border-t border-line pt-6">
+          <li class="border-t border-line pt-6">
             {project.image && (
               <div class="mb-6 overflow-hidden rounded-xl border border-line">
                 <img
                   src={project.image.src}
                   alt={project.image.alt}
-                  width="1440"
-                  height="900"
+                  width="1200"
+                  height="750"
                   loading="lazy"
                   decoding="async"
                   class="aspect-[16/10] w-full object-cover"
@@ -158,40 +158,36 @@ const alsoShipped: AlsoItem[] = [
       }
     </ul>
 
-    <div class="mt-14 max-w-[65ch] border-t border-line pt-8 sm:mt-16 sm:pt-9">
+    <div class="mt-16 border-t border-line pt-10 sm:mt-20 sm:pt-12">
       <h3
         id="also-shipped-heading"
-        class="font-display text-xs font-bold uppercase tracking-[0.24em] text-mist sm:text-sm"
+        class="font-display text-xs font-bold uppercase tracking-[0.28em] text-accent sm:text-sm"
       >
         Also shipped
       </h3>
-      <ul class="mt-6 space-y-5 sm:mt-7 sm:space-y-6" role="list" aria-labelledby="also-shipped-heading">
+      <ul
+        class="mt-10 grid gap-8 sm:mt-12 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-10 lg:grid-cols-3"
+        role="list"
+        aria-labelledby="also-shipped-heading"
+      >
         {
           alsoShipped.map((item) => (
-            <li class="text-base leading-relaxed text-fog sm:leading-[1.7]">
-              <span class="font-medium text-snow">{item.title}</span>
-              <span class="text-fog" aria-hidden="true">
-                {' '}
-                —{' '}
-              </span>
-              <span class="text-fog">{item.detail}</span>
-              {item.stack && (
-                <>
-                  <span class="text-fog" aria-hidden="true">
-                    {' '}
-                    ·{' '}
-                  </span>
-                  <span class="text-fog">{item.stack}</span>
-                </>
-              )}
-              {item.status && (
-                <>
-                  <span class="text-fog" aria-hidden="true">
-                    {' '}
-                    ·{' '}
-                  </span>
-                  <span class="text-fog">{item.status}</span>
-                </>
+            <li class="border-t border-line pt-6">
+              <p class="font-display text-lg font-semibold tracking-tight text-snow sm:text-xl">
+                {item.title}
+              </p>
+              <p class="mt-3 text-base leading-relaxed text-fog sm:leading-[1.7]">{item.detail}</p>
+              {(item.stack || item.status) && (
+                <p class="mt-4 text-base text-snow">
+                  {item.stack}
+                  {item.stack && item.status && (
+                    <span class="text-fog" aria-hidden="true">
+                      {' '}
+                      ·{' '}
+                    </span>
+                  )}
+                  {item.status}
+                </p>
               )}
             </li>
           ))
