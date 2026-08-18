@@ -25,18 +25,6 @@ const entries = [
     body: 'LearnCapsule, SCORM/LMS, HonoClinic.',
   },
 ] as const;
-
-const email = 'allangmr10@gmail.com';
-const contactLinks = [
-  { href: `mailto:${email}`, label: email, external: false },
-  {
-    href: 'https://www.linkedin.com/in/allan-montilla-00a756b3',
-    label: 'LinkedIn',
-    external: true,
-  },
-  { href: 'https://github.com/allangmr', label: 'GitHub', external: true },
-  { href: 'https://x.com/allan_coding', label: 'X', external: true },
-];
 ---
 
 <section
@@ -96,31 +84,6 @@ const contactLinks = [
           ))
         }
       </ul>
-
-      <div id="contact" class="mt-10 border-t border-line pt-6 sm:mt-12 sm:pt-7">
-        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">Contact</p>
-        <p class="mt-3 text-[15px] leading-relaxed text-fog sm:text-base sm:leading-[1.7]">
-          Panama · Available for new opportunities
-        </p>
-        <ul
-          class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[15px] text-snow sm:mt-5 sm:text-base"
-          role="list"
-        >
-          {
-            contactLinks.map((link) => (
-              <li>
-                <a
-                  href={link.href}
-                  class="underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent hover:decoration-accent"
-                  {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
     </div>
   </div>
 </section>

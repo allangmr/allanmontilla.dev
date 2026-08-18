@@ -222,25 +222,6 @@ body {
   color: rgb(89 115 134 / 0.7);
 }
 
-.site-header__grid {
-  display: none;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.25rem;
-}
-
-@media (min-width: 640px) {
-  .site-header__grid {
-    display: grid;
-  }
-}
-
-.site-header__grid span {
-  height: 0.25rem;
-  width: 0.25rem;
-  border-radius: 9999px;
-  background: rgb(217 215 215 / 0.55);
-}
-
 /* Hero: keep H1 + footer row in the first viewport, especially ~1024×768 */
 .hero-shell {
   padding: 6.5rem 1.25rem 2.75rem;
