@@ -1,27 +1,28 @@
 ---
-const email = 'allangmr10@gmail.com';
 const links = [
-  { href: `mailto:${email}`, label: email, external: false },
   {
     href: 'https://www.linkedin.com/in/allan-montilla-00a756b3',
     label: 'LinkedIn',
-    external: true,
   },
-  { href: 'https://github.com/allangmr', label: 'GitHub', external: true },
-  { href: 'https://x.com/allan_coding', label: 'X', external: true },
+  { href: 'https://github.com/allangmr', label: 'GitHub' },
+  { href: 'https://x.com/allan_coding', label: 'X' },
 ];
 ---
 
 <footer class="border-t border-line bg-void">
   <div class="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-8 sm:px-8 lg:px-12">
-    <ul class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mist" role="list">
+    <p class="text-xs tracking-wide text-mist">
+      © {new Date().getFullYear()} Allan Montilla
+    </p>
+    <ul class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-mist" role="list">
       {
         links.map((link) => (
           <li>
             <a
               href={link.href}
               class="transition-colors duration-200 hover:text-accent"
-              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               {link.label}
             </a>
@@ -29,8 +30,5 @@ const links = [
         ))
       }
     </ul>
-    <p class="text-xs tracking-wide text-mist">
-      © {new Date().getFullYear()} Allan Montilla
-    </p>
   </div>
 </footer>
