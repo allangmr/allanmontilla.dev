@@ -9,9 +9,42 @@ interface Props {
 const title = Astro.props.title ?? 'Allan Montilla · Web Developer & Software Engineer';
 const description =
   Astro.props.description ??
-  'Hi, I’m Allan. Web developer & software engineer in Panama. I build product UIs with React, Next.js, and TypeScript. Open to remote US/EU roles.';
+  'Senior Frontend Engineer in Panama at Huge, building LMS and product UIs with TypeScript, React, and Next.js, open to remote US/EU.';
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og.svg', Astro.site).href;
+const siteUrl = Astro.site?.href ?? 'https://allanmontilla.dev/';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${siteUrl}#person`,
+      name: 'Allan Montilla',
+      url: siteUrl,
+      email: 'allangmr10@gmail.com',
+      jobTitle: 'Senior Frontend Engineer',
+      homeLocation: {
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'Panama',
+        },
+      },
+      sameAs: [
+        'https://github.com/allangmr',
+        'https://www.linkedin.com/in/allan-montilla-00a756b3',
+        'https://x.com/allan_coding',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}#website`,
+      name: 'Allan Montilla',
+      url: siteUrl,
+      author: { '@id': `${siteUrl}#person` },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -34,11 +67,16 @@ const ogImage = new URL('/og.svg', Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Allan Montilla" />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/svg+xml" />
 
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@allan_coding" />
+    <meta name="twitter:creator" content="@allan_coding" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />

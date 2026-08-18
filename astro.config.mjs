@@ -1,11 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://allanmontilla.dev',
   output: 'static',
+  integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
     // Prevent LightningCSS from dropping -webkit-backdrop-filter (Safari)
