@@ -8,13 +8,14 @@ type WorkItem = {
   links?: { label: string; href: string }[];
 };
 
+type AlsoItem = {
+  title: string;
+  detail: string;
+  stack?: string;
+  status?: string;
+};
+
 const projects: WorkItem[] = [
-  {
-    title: 'Internal messaging platform and training',
-    what: 'Internal messaging and training system for sharing videos, images, and other multimedia. Shipped work from my earlier site.',
-    stack: ['Vue', 'Laravel', 'PHP', 'MariaDB'],
-    note: 'Shipped',
-  },
   {
     title: 'LearnCapsule',
     what: 'AI practice companion for English and German. Users save words, phrases, and audio, then turn them into flashcards, pronunciation practice, quizzes, and review capsules.',
@@ -64,6 +65,25 @@ const projects: WorkItem[] = [
     links: [
       { label: 'Live', href: 'https://mrcriptonite.com' },
     ],
+  },
+];
+
+const alsoShipped: AlsoItem[] = [
+  {
+    title: 'Internal messaging and training',
+    detail: 'Videos, images, and multimedia for internal teams.',
+    stack: 'Vue · Laravel · PHP · MariaDB',
+    status: 'Shipped',
+  },
+  {
+    title: 'Huge',
+    detail:
+      'Team work (unnamed clients): AEM Classic → EDS migrations, site search, financial calculators, 3D product configurators.',
+  },
+  {
+    title: 'TIVIT LATAM',
+    detail:
+      'Voting module for Federación Nacional de Cafeteros elections; billing and repair-order software for IDAAN Panama.',
   },
 ];
 ---
@@ -137,5 +157,46 @@ const projects: WorkItem[] = [
         ))
       }
     </ul>
+
+    <div class="mt-14 max-w-[65ch] border-t border-line pt-8 sm:mt-16 sm:pt-9">
+      <h3
+        id="also-shipped-heading"
+        class="font-display text-[11px] font-bold uppercase tracking-[0.24em] text-mist sm:text-xs"
+      >
+        Also shipped
+      </h3>
+      <ul class="mt-5 space-y-3 sm:mt-6 sm:space-y-3.5" role="list" aria-labelledby="also-shipped-heading">
+        {
+          alsoShipped.map((item) => (
+            <li class="text-[14px] leading-snug text-fog sm:text-[15px] sm:leading-snug">
+              <span class="font-medium text-snow">{item.title}</span>
+              <span class="text-mist" aria-hidden="true">
+                {' '}
+                —{' '}
+              </span>
+              <span>{item.detail}</span>
+              {item.stack && (
+                <>
+                  <span class="text-mist" aria-hidden="true">
+                    {' '}
+                    ·{' '}
+                  </span>
+                  <span class="text-mist">{item.stack}</span>
+                </>
+              )}
+              {item.status && (
+                <>
+                  <span class="text-mist" aria-hidden="true">
+                    {' '}
+                    ·{' '}
+                  </span>
+                  <span class="text-mist">{item.status}</span>
+                </>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>

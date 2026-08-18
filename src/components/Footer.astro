@@ -12,21 +12,15 @@ const links = [
 ];
 ---
 
-<footer id="contact" class="border-t border-line bg-void">
-  <div class="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-    <h2 class="font-display text-xs font-bold uppercase tracking-[0.28em] text-accent sm:text-sm">
-      Contact
-    </h2>
-    <p class="mt-8 max-w-[65ch] text-lg leading-relaxed text-snow-muted sm:mt-10 sm:leading-[1.7]">
-      Panama · Available for new opportunities
-    </p>
-    <ul class="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-snow" role="list">
+<footer class="border-t border-line bg-void">
+  <div class="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-8 sm:px-8 lg:px-12">
+    <ul class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-mist" role="list">
       {
         links.map((link) => (
           <li>
             <a
               href={link.href}
-              class="inline-flex min-h-11 items-center underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-200 hover:text-accent hover:decoration-accent"
+              class="transition-colors duration-200 hover:text-accent"
               {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             >
               {link.label}
@@ -35,7 +29,7 @@ const links = [
         ))
       }
     </ul>
-    <p class="mt-12 text-xs tracking-wide text-mist">
+    <p class="text-xs tracking-wide text-mist">
       © {new Date().getFullYear()} Allan Montilla
     </p>
   </div>
