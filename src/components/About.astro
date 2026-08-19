@@ -4,15 +4,17 @@ const entries = [
     label: 'Now',
     org: 'Huge',
     role: 'Senior Frontend Engineer',
-    years: 'Jul 2025–present',
+    years: 'Aug 2021–present',
+    note: 'Senior since Jul 2025',
     certs: 'Adobe Commerce Developer Expert · Contentstack Developer',
-    body: 'Enterprise frontend on a team: AEM Classic → EDS, site search, financial calculators, 3D product configurators. Client brands stay off this page; happy to walk through the public surfaces in an interview.',
+    body: 'Enterprise frontend on a team: AEM Classic → EDS, site search, financial calculators, 3D product configurators. Typically 3–4 client teams a year — 20+ production projects since 2021. Client brands stay off this page; happy to walk through the public surfaces in an interview.',
   },
   {
     label: 'Earlier',
     org: 'TIVIT LATAM',
     role: 'Software Developer',
     years: 'Feb 2019–Aug 2021',
+    note: null,
     certs: null,
     body: 'Voting module for Federación Nacional de Cafeteros elections. Billing and repair-order software used by IDAAN Panama.',
   },
@@ -21,6 +23,7 @@ const entries = [
     org: 'SoftwarePanama',
     role: null,
     years: null,
+    note: null,
     certs: null,
     body: 'LearnCapsule, SCORM/LMS, HonoClinic.',
   },
@@ -73,6 +76,10 @@ const entries = [
                   )}
                   {entry.years && <span class="text-sm text-mist sm:text-[15px]">{entry.years}</span>}
                 </p>
+              )}
+
+              {entry.note && (
+                <p class="mt-1 text-[12px] leading-relaxed text-mist sm:text-[13px]">{entry.note}</p>
               )}
 
               {entry.certs && (
