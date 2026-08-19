@@ -8,6 +8,9 @@ export default defineConfig({
   site: 'https://allanmontilla.dev',
   output: 'static',
   integrations: [sitemap()],
+  build: {
+    inlineStylesheets: 'always',
+  },
   vite: {
     plugins: [tailwindcss()],
     // Prevent LightningCSS from dropping -webkit-backdrop-filter (Safari)
