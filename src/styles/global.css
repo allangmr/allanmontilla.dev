@@ -136,15 +136,15 @@ body {
 
 .site-header__logo {
   display: inline-flex;
-  height: 1.375rem;
+  height: 1.75rem;
   align-items: center;
   color: var(--color-snow);
 }
 
 .site-header__logo img {
-  height: 1.375rem;
+  height: 1.75rem;
   width: auto;
-  max-height: 1.375rem;
+  max-height: 1.75rem;
   object-fit: contain;
   object-position: left center;
   /* Avoid any baked edge reading as a frame on #0F1821 */
@@ -156,12 +156,12 @@ body {
 
 @media (min-width: 640px) {
   .site-header__logo {
-    height: 1.5rem;
+    height: 2rem;
   }
 
   .site-header__logo img {
-    height: 1.5rem;
-    max-height: 1.5rem;
+    height: 2rem;
+    max-height: 2rem;
   }
 }
 
